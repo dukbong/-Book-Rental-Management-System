@@ -1,20 +1,18 @@
 package book.rental.management.service;
 
 import book.rental.management.domain.book.Book;
-import book.rental.management.domain.loan.Loan;
-import book.rental.management.domain.loan.LoanStatus;
 import book.rental.management.repository.book.BookRepository;
 import book.rental.management.request.book.AddBookRequest;
 import book.rental.management.request.book.BookCondition;
 import book.rental.management.response.book.BookResponse;
 import org.assertj.core.groups.Tuple;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -105,6 +103,24 @@ class BookServiceTest {
         assertThat(findBook.getAuthor()).isEqualTo("test-author");
         assertThat(findBook.getPublisher()).isEqualTo("test-publisher");
     }
+
+    @Test
+    @DisplayName("[실패]: 중복 책 등록")
+    void addBook_withDuplicateBook() {
+        // given
+        AddBookRequest addBookRequest1 = createAddBookRequest("test-book", "test-author", "test-publisher");
+        bookService.addBook(addBookRequest1);
+        AddBookRequest addBookRequest2 = createAddBookRequest("test-book", "test-author", "test-publisher");
+
+
+        // when & then
+        Exception ex = Assertions.assertThrows(IllegalArgumentException.class, () -> {
+            bookService.addBook(addBookRequest2);
+        });
+        assertThat(ex.getMessage()).isEqualTo("이미 등록된 책입니다.");
+    }
+
+
 
     @Test
     @DisplayName("[성공]: 책 전체 조회 - 사전순")

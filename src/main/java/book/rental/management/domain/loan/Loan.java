@@ -52,15 +52,19 @@ public class Loan extends Base {
         return loan;
     }
 
-    public void settingBook(Book book) {
+    private void settingBook(Book book) {
         this.book = book;
     }
 
-    public void settingMember(Member member) {
+    private void settingMember(Member member) {
         this.member = member;
     }
 
     public void updateLoanStatus(LoanStatus loanStatus) {
         this.loanStatus = loanStatus;
+    }
+
+    public boolean isActive() {
+        return this.loanStatus == LoanStatus.ON_TIME || this.loanStatus == LoanStatus.OVERDUE;
     }
 }

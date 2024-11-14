@@ -1,10 +1,13 @@
 package book.rental.management.service;
 
 import book.rental.management.domain.book.Book;
+import book.rental.management.domain.member.Member;
 import book.rental.management.repository.book.BookQueryDslRepository;
 import book.rental.management.repository.book.BookRepository;
+import book.rental.management.repository.member.MemberRepository;
 import book.rental.management.request.book.AddBookRequest;
 import book.rental.management.request.book.BookCondition;
+import book.rental.management.response.book.BookLoanResponse;
 import book.rental.management.response.book.BookResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -19,6 +22,7 @@ public class BookService {
 
     private final BookRepository bookRepository;
     private final BookQueryDslRepository bookQueryDslRepository;
+    private final MemberRepository memberRepository;
 
     // Book 등록
     @Transactional
@@ -48,6 +52,14 @@ public class BookService {
         return convertResponse(findBooks);
     }
 
+    // batch_size를 사용하여 단건에서 IN 절로 변경함으로써 N -> 1로 성능 최적화
+    public List<BookLoanResponse> loanList(Long memberId) {
+        Member member = memberRepository.findById(memberId).orElseThrow(
+                () -> new IllegalArgumentException("사용자를 찾을 수 없습니다.")
+        );
+        return member.getActiveLoanSortedByReturnDate();
+    }
+
     private List<BookResponse> convertResponse(List<Book> books) {
         return books.stream()
                 .map(book -> new BookResponse(
@@ -56,4 +68,5 @@ public class BookService {
                         book.getPublisher()
                 )).toList();
     }
+
 }

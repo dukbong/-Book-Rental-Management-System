@@ -59,18 +59,4 @@ public class BookQueryDslRepository {
         return QBook.book.publisher.like("%" + publisher + "%");
     }
 
-
-    public List<Book> findByIdWithLoan(Long bookId) {
-        QBook book = QBook.book;
-        QLoan loan = QLoan.loan;
-
-        return query
-                .select(book)
-                .from(book)
-                .leftJoin(book.loans, loan)
-                .where(
-                        book.id.eq(bookId)
-                )
-                .fetch();
-    }
 }

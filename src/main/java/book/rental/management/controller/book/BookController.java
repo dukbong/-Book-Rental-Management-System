@@ -3,6 +3,7 @@ package book.rental.management.controller.book;
 import book.rental.management.request.book.AddBookRequest;
 import book.rental.management.request.book.BookCondition;
 import book.rental.management.response.book.BookApiResponse;
+import book.rental.management.response.book.BookLoanResponse;
 import book.rental.management.response.book.BookResponse;
 import book.rental.management.service.BookService;
 import lombok.RequiredArgsConstructor;
@@ -35,5 +36,11 @@ public class BookController {
     @PostMapping("/api/v1/book")
     public Long addBook(@RequestBody AddBookRequest request) {
         return bookService.addBook(request);
+    }
+
+    @GetMapping("/api/v1/book/{memberId}")
+    public ResponseEntity<BookApiResponse<List<BookLoanResponse>>> loanList(@PathVariable("memberId") Long memberId) {
+        List<BookLoanResponse> result = bookService.loanList(memberId);
+        return ResponseEntity.ok().body(new BookApiResponse<>(result));
     }
 }
