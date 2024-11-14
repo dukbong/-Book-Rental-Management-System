@@ -1,13 +1,16 @@
 package book.rental.management.domain.member;
 
 import book.rental.management.domain.Base;
+import book.rental.management.domain.book.Book;
 import book.rental.management.domain.loan.Loan;
+import book.rental.management.domain.loan.LoanStatus;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,5 +38,14 @@ public class Member extends Base {
     public void rental(Loan loan) {
         this.loans.add(loan);
         loan.settingMember(this);
+    }
+
+    public void rentTo(Book book) {
+        if(!book.isAvailableForLoan()) {
+            throw new IllegalArgumentException("이미 대여 중인 책입니다.");
+        }
+        Loan loan = Loan.createLoan(LocalDateTime.now(), LocalDateTime.now().plusDays(7), LoanStatus.ON_TIME, this, book);
+        this.loans.add(loan);
+        book.addLoan(loan);
     }
 }

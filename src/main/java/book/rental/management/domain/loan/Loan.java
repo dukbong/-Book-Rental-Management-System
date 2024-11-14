@@ -34,10 +34,22 @@ public class Loan extends Base {
     private Book book;
 
     @Builder
-    public Loan(LocalDateTime loanDate, LocalDateTime returnDate, LoanStatus loanStatus) {
+    private Loan(LocalDateTime loanDate, LocalDateTime returnDate, LoanStatus loanStatus) {
         this.loanDate = loanDate;
         this.returnDate = returnDate;
         this.loanStatus = loanStatus;
+    }
+
+    // DDD 방식 으로 변경 위한 테스트
+    public static Loan createLoan(LocalDateTime now, LocalDateTime returnDate, LoanStatus loanStatus, Member member, Book book) {
+        Loan loan = Loan.builder()
+                .loanDate(now)
+                .returnDate(returnDate)
+                .loanStatus(loanStatus)
+                .build();
+        loan.settingMember(member);
+        loan.settingBook(book);
+        return loan;
     }
 
     public void settingBook(Book book) {

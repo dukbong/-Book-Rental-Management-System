@@ -41,7 +41,7 @@ public class MemberController {
 
     @PostMapping("/api/v1/member/rental")
     public Long rentalBook(@RequestBody @Valid RentBookRequest request) {
-        return memberService.rentalBook(request);
+        return memberService.rentalBookV2(request);
     }
 
     @PostMapping("/api/v1/member/retrun")

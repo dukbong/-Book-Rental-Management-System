@@ -2,6 +2,7 @@ package book.rental.management.domain.book;
 
 import book.rental.management.domain.Base;
 import book.rental.management.domain.loan.Loan;
+import book.rental.management.domain.loan.LoanStatus;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -37,5 +38,13 @@ public class Book extends Base {
     public void rental(Loan loan) {
         this.loans.add(loan);
         loan.settingBook(this);
+    }
+
+    public boolean isAvailableForLoan() {
+        return this.loans.stream().noneMatch(loan -> loan.getLoanStatus() == LoanStatus.ON_TIME || loan.getLoanStatus() == LoanStatus.OVERDUE);
+    }
+
+    public void addLoan(Loan loan) {
+        this.loans.add(loan);
     }
 }

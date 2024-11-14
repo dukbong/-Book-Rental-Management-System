@@ -81,6 +81,20 @@ public class MemberService {
         return findBook.getId();
     }
 
+    // DDD 방식으로 변경
+    @Transactional
+    public Long rentalBookV2(RentBookRequest request) {
+        Member findMember = memberRepository.findById(request.getMemberId()).orElseThrow(
+                () -> new IllegalArgumentException("사용자를 찾을 수 없습니다.")
+        );
+        Book findBook = bookRepository.findById(request.getBookId()).orElseThrow(
+                () -> new IllegalArgumentException("책을 찾을 수 없습니다.")
+        );
+        findMember.rentTo(findBook);
+
+        return findBook.getId();
+    }
+
     // Member -> Book 반납
     @Transactional
     public Long returnBook(RentBookRequest request) {
