@@ -1,7 +1,5 @@
 package book.rental.management.repository.member;
 
-import book.rental.management.domain.book.QBook;
-import book.rental.management.domain.loan.QLoan;
 import book.rental.management.domain.member.Member;
 import book.rental.management.domain.member.QMember;
 import book.rental.management.request.member.MemberCondition;

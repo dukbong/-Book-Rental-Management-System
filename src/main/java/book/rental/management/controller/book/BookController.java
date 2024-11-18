@@ -6,6 +6,7 @@ import book.rental.management.response.book.BookApiResponse;
 import book.rental.management.response.book.BookLoanResponse;
 import book.rental.management.response.book.BookResponse;
 import book.rental.management.service.BookService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -34,8 +35,9 @@ public class BookController {
     }
 
     @PostMapping("/api/v1/book")
-    public Long addBook(@RequestBody AddBookRequest request) {
-        return bookService.addBook(request);
+    public ResponseEntity<BookApiResponse<Long>> addBook(@RequestBody @Valid AddBookRequest request) {
+        Long id = bookService.addBook(request);
+        return ResponseEntity.ok().body(new BookApiResponse<>(id));
     }
 
     @GetMapping("/api/v1/book/{memberId}")

@@ -3,8 +3,6 @@ package book.rental.management.controller.member;
 import book.rental.management.request.member.JoinMemberRequest;
 import book.rental.management.request.member.MemberCondition;
 import book.rental.management.request.member.RentBookRequest;
-import book.rental.management.response.book.BookApiResponse;
-import book.rental.management.response.book.BookLoanResponse;
 import book.rental.management.response.member.MemberApiResponse;
 import book.rental.management.response.member.MemberResponse;
 import book.rental.management.service.MemberService;
@@ -37,18 +35,21 @@ public class MemberController {
     }
 
     @PostMapping("/api/v1/member")
-    public Long addMember(@RequestBody @Valid JoinMemberRequest request) {
-        return memberService.addMember(request);
+    public ResponseEntity<MemberApiResponse<Long>> addMember(@RequestBody @Valid JoinMemberRequest request) {
+        Long memberId = memberService.addMember(request);
+        return ResponseEntity.ok().body(new MemberApiResponse<>(memberId));
     }
 
     @PostMapping("/api/v1/member/rental")
-    public Long rentalBook(@RequestBody @Valid RentBookRequest request) {
-        return memberService.rentalBookV2(request);
+    public ResponseEntity<MemberApiResponse<Long>> rentalBook(@RequestBody @Valid RentBookRequest request) {
+        Long bookId = memberService.rentalBookV2(request);
+        return ResponseEntity.ok().body(new MemberApiResponse<>(bookId));
     }
 
     @PostMapping("/api/v1/member/retrun")
-    public Long returnBook(@RequestBody @Valid RentBookRequest request) {
-        return memberService.returnBookV2(request);
+    public ResponseEntity<MemberApiResponse<Long>> returnBook(@RequestBody @Valid RentBookRequest request) {
+        Long bookId = memberService.returnBookV2(request);
+        return ResponseEntity.ok().body(new MemberApiResponse<>(bookId));
     }
 
 }

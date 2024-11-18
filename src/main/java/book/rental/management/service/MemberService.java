@@ -1,8 +1,6 @@
 package book.rental.management.service;
 
 import book.rental.management.domain.book.Book;
-import book.rental.management.domain.loan.Loan;
-import book.rental.management.domain.loan.LoanStatus;
 import book.rental.management.domain.member.Member;
 import book.rental.management.repository.book.BookRepository;
 import book.rental.management.repository.member.MemberQueryDslRepository;
@@ -10,13 +8,11 @@ import book.rental.management.repository.member.MemberRepository;
 import book.rental.management.request.member.JoinMemberRequest;
 import book.rental.management.request.member.MemberCondition;
 import book.rental.management.request.member.RentBookRequest;
-import book.rental.management.response.book.BookLoanResponse;
 import book.rental.management.response.member.MemberResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 

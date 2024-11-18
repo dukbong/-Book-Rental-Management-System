@@ -1,5 +1,6 @@
 package book.rental.management.service;
 
+import book.rental.management.support.IntegrationTestSupport;
 import book.rental.management.domain.book.Book;
 import book.rental.management.repository.book.BookRepository;
 import book.rental.management.request.book.AddBookRequest;
@@ -10,16 +11,12 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringBootTest
-@Transactional
-class BookServiceTest {
+class BookServiceTest extends IntegrationTestSupport {
 
     @Autowired
     private BookService bookService;
@@ -39,6 +36,7 @@ class BookServiceTest {
         Book findBook = bookRepository.findById(bookId).orElseThrow(
                 () -> new IllegalArgumentException("책을 찾을 수 없습니다.")
         );
+
         assertThat(findBook.getTitle()).isEqualTo("test-book");
         assertThat(findBook.getAuthor()).isEqualTo("test-author");
         assertThat(findBook.getPublisher()).isEqualTo("test-publisher");
@@ -114,9 +112,7 @@ class BookServiceTest {
 
 
         // when & then
-        Exception ex = Assertions.assertThrows(IllegalArgumentException.class, () -> {
-            bookService.addBook(addBookRequest2);
-        });
+        Exception ex = Assertions.assertThrows(IllegalArgumentException.class, () -> bookService.addBook(addBookRequest2));
         assertThat(ex.getMessage()).isEqualTo("이미 등록된 책입니다.");
     }
 
@@ -158,6 +154,29 @@ class BookServiceTest {
         bookService.addBook(addBookRequest3);
         BookCondition condition = new BookCondition();
         condition.setTitle("a");
+
+        // when
+        List<BookResponse> findBooks = bookService.getBookByCondition(condition);
+
+        // then
+        assertThat(findBooks).hasSize(1)
+                .extracting("title", "author", "publisher")
+                .containsExactly(
+                        Tuple.tuple("a", "a-author", "a-publisher")
+                );
+    }
+
+    @Test
+    @DisplayName("[성공]: 제목, 저자, 출판사로 조회 - 사전순")
+    void getBooksByConditionWithAll() {
+        // given
+        AddBookRequest addBookRequest1 = createAddBookRequest("b", "b-author", "b-publisher");
+        AddBookRequest addBookRequest2 = createAddBookRequest("a", "a-author", "a-publisher");
+        AddBookRequest addBookRequest3 = createAddBookRequest("c", "c-author", "c-publisher");
+        bookService.addBook(addBookRequest1);
+        bookService.addBook(addBookRequest2);
+        bookService.addBook(addBookRequest3);
+        BookCondition condition = new BookCondition("a", "a-author", "a-publisher");
 
         // when
         List<BookResponse> findBooks = bookService.getBookByCondition(condition);

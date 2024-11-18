@@ -1,9 +1,12 @@
 package book.rental.management.service;
 
+import book.rental.management.support.IntegrationTestSupport;
 import book.rental.management.domain.book.Book;
+import book.rental.management.domain.loan.Loan;
 import book.rental.management.domain.loan.LoanStatus;
 import book.rental.management.domain.member.Member;
 import book.rental.management.repository.book.BookRepository;
+import book.rental.management.repository.loan.LoanRepository;
 import book.rental.management.repository.member.MemberRepository;
 import book.rental.management.request.book.AddBookRequest;
 import book.rental.management.request.member.JoinMemberRequest;
@@ -16,17 +19,13 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-@SpringBootTest
-@Transactional
-class MemberServiceTest {
+class MemberServiceTest extends IntegrationTestSupport {
 
     @Autowired
     private MemberService memberService;
@@ -36,6 +35,9 @@ class MemberServiceTest {
     private MemberRepository memberRepository;
     @Autowired
     private BookRepository bookRepository;
+
+    @Autowired
+    private LoanRepository loanRepository;
 
     @Test
     @DisplayName("[성공]: 이름, 이메일, 전화번호 모두 입력한 사용자의 등록")
@@ -110,7 +112,7 @@ class MemberServiceTest {
     void addMember_duplicationName() {
         // given
         JoinMemberRequest joinMemberRequest1 = createJoinMemberRequestAll("user1", "010-1234-5678", "asdf@gmail.com");
-        Long memberId = memberService.addMember(joinMemberRequest1);
+        memberService.addMember(joinMemberRequest1);
         JoinMemberRequest joinMemberRequest2 = createJoinMemberRequestAll("user1", "010-9789-4567", "zxcv@gmail.com");
 
         // when & then
@@ -156,6 +158,29 @@ class MemberServiceTest {
         memberService.addMember(joinMemberRequest3);
         MemberCondition condition = new MemberCondition();
         condition.setName("Juergen");
+
+        // when
+        List<MemberResponse> findMember = memberService.getMemberByCondition(condition);
+
+        // then
+        assertThat(findMember).hasSize(1)
+                .extracting("name", "email", "phoneNumber")
+                .containsExactlyInAnyOrder(
+                        Tuple.tuple("Juergen Hoeller", "bbbb@gmail.com", "010-2222-2222")
+                );
+    }
+
+    @Test
+    @DisplayName("[성공]: 이름, 이메일, 전화번호로 조회 - 사전순")
+    void getMembersByConditionWithAll() {
+        // given
+        JoinMemberRequest joinMemberRequest1 = createJoinMemberRequestAll("Rod Johnson", "aaaa@gmail.com", "010-1111-1111");
+        JoinMemberRequest joinMemberRequest2 = createJoinMemberRequestAll("Juergen Hoeller", "bbbb@gmail.com", "010-2222-2222");
+        JoinMemberRequest joinMemberRequest3 = createJoinMemberRequestAll("Dave Syer", "cccc@gmail.com", "010-3333-3333");
+        memberService.addMember(joinMemberRequest1);
+        memberService.addMember(joinMemberRequest2);
+        memberService.addMember(joinMemberRequest3);
+        MemberCondition condition = new MemberCondition("Juergen Hoeller", "bbbb@gmail.com", "010-2222-2222");
 
         // when
         List<MemberResponse> findMember = memberService.getMemberByCondition(condition);
@@ -272,6 +297,46 @@ class MemberServiceTest {
     }
 
     @Test
+    void rentalBook2() {
+        // given
+        JoinMemberRequest joinMemberRequest1 = createJoinMemberRequestAll("b", "aaaa@gmail.com", "010-1111-1111");
+        Long memberId1 = memberService.addMember(joinMemberRequest1);
+        JoinMemberRequest joinMemberRequest2 = createJoinMemberRequestAll("bb", "bbbb@gmail.com", "010-2222-2222");
+        Long memberId2 = memberService.addMember(joinMemberRequest2);
+        AddBookRequest addBookRequest1 = createAddBookRequest("JPA", "b-author", "b-publisher");
+        Long bookId = bookService.addBook(addBookRequest1);
+
+        RentBookRequest rentBookRequest = new RentBookRequest();
+        rentBookRequest.setBookId(bookId);
+        rentBookRequest.setMemberId(memberId1);
+        memberService.rentalBookV2(rentBookRequest);
+
+        Loan loan = loanRepository.findAll().get(0);
+        loan.updateLoanStatus(LoanStatus.RETURNED);
+
+        RentBookRequest rentBookRequest2 = new RentBookRequest();
+        rentBookRequest2.setBookId(bookId);
+        rentBookRequest2.setMemberId(memberId2);
+
+        // when
+        Long rentBookId = memberService.rentalBookV2(rentBookRequest2);
+        // then
+        Book rentBook = bookRepository.findById(rentBookId).orElseThrow(
+                () -> new IllegalArgumentException("책을 찾을 수 없습니다.")
+        );
+
+        assertThat(rentBook.getLoans()).hasSize(2);
+            assertThat(rentBook.getLoans().get(1).getBook().getTitle()).isEqualTo("JPA");
+            assertThat(rentBook.getLoans().get(1).getBook().getAuthor()).isEqualTo("b-author");
+            assertThat(rentBook.getLoans().get(1).getBook().getPublisher()).isEqualTo("b-publisher");
+            assertThat(rentBook.getLoans().get(1).getMember().getName()).isEqualTo("bb");
+            assertThat(rentBook.getLoans().get(1).getMember().getEmail()).isEqualTo("bbbb@gmail.com");
+        assertThat(rentBook.getLoans().get(0).getMember().getName()).isEqualTo("b");
+        assertThat(rentBook.getLoans().get(0).getMember().getEmail()).isEqualTo("aaaa@gmail.com");
+
+    }
+
+    @Test
     void loanList() {
         // given
         JoinMemberRequest joinMemberRequest1 = createJoinMemberRequestAll("b", "aaaa@gmail.com", "010-1111-1111");
@@ -295,7 +360,6 @@ class MemberServiceTest {
             assertThat(bookLoanResponse.getPublisher()).isEqualTo("b-publisher");
             assertThat(bookLoanResponse.getStatus()).isEqualTo(LoanStatus.ON_TIME);
         }
-
     }
 
     @Test
@@ -312,9 +376,9 @@ class MemberServiceTest {
         memberService.rentalBookV2(rentBookRequest);
 
         // when & then
-        Exception ex = Assertions.assertThrows(IllegalArgumentException.class, () -> {
-            bookService.loanList(memberId1 + 1L);
-        });
+        Exception ex = Assertions.assertThrows(IllegalArgumentException.class, () ->
+            bookService.loanList(memberId1 + 1L)
+        );
         assertThat(ex.getMessage()).isEqualTo("사용자를 찾을 수 없습니다.");
     }
 
@@ -332,9 +396,9 @@ class MemberServiceTest {
         rentBookRequest.setMemberId(memberId1 + 1L);
 
         // when & then
-        Exception ex = assertThrows(IllegalArgumentException.class, () -> {
-            memberService.rentalBookV2(rentBookRequest);
-        });
+        Exception ex = assertThrows(IllegalArgumentException.class, () ->
+            memberService.rentalBookV2(rentBookRequest)
+        );
         assertThat(ex.getMessage()).isEqualTo("사용자를 찾을 수 없습니다.");
     }
     @Test
@@ -351,9 +415,9 @@ class MemberServiceTest {
         rentBookRequest.setMemberId(memberId1);
 
         // when & then
-        Exception ex = assertThrows(IllegalArgumentException.class, () -> {
-            memberService.rentalBookV2(rentBookRequest);
-        });
+        Exception ex = assertThrows(IllegalArgumentException.class, () ->
+            memberService.rentalBookV2(rentBookRequest)
+        );
         assertThat(ex.getMessage()).isEqualTo("책을 찾을 수 없습니다.");
     }
 
@@ -372,9 +436,9 @@ class MemberServiceTest {
         memberService.rentalBookV2(rentBookRequest);
         rentBookRequest.setMemberId(memberId1 + 1L);
         // when
-        Exception ex = assertThrows(IllegalArgumentException.class, () -> {
-            memberService.returnBookV2(rentBookRequest);
-        });
+        Exception ex = assertThrows(IllegalArgumentException.class, () ->
+            memberService.returnBookV2(rentBookRequest)
+        );
         assertThat(ex.getMessage()).isEqualTo("사용자를 찾을 수 없습니다.");
     }
     @Test
@@ -392,9 +456,9 @@ class MemberServiceTest {
         memberService.rentalBookV2(rentBookRequest);
         rentBookRequest.setBookId(bookId + 1L);
         // when & then
-        Exception ex = assertThrows(IllegalArgumentException.class, () -> {
-            memberService.returnBookV2(rentBookRequest);
-        });
+        Exception ex = assertThrows(IllegalArgumentException.class, () ->
+            memberService.returnBookV2(rentBookRequest)
+        );
         assertThat(ex.getMessage()).isEqualTo("책을 찾을 수 없습니다.");
     }
     @Test
@@ -426,6 +490,7 @@ class MemberServiceTest {
     }
 
     @Test
+    @DisplayName("[실패]: 이미 대여중인 책입니다.")
     void rentalBook_duplication() {
         // given
         JoinMemberRequest joinMemberRequest1 = createJoinMemberRequestAll("b", "aaaa@gmail.com", "010-1111-1111");
@@ -445,11 +510,180 @@ class MemberServiceTest {
         rentBookRequest2.setMemberId(memberId2);
 
         // when & then
-        Exception ex = assertThrows(IllegalArgumentException.class, () -> {
-            memberService.rentalBookV2(rentBookRequest2);
-        });
+        Exception ex = assertThrows(IllegalArgumentException.class, () ->
+            memberService.rentalBookV2(rentBookRequest2)
+        );
 
         assertThat(ex.getMessage()).isEqualTo("이미 대여 중인 책입니다.");
+    }
+
+    @Test
+    @DisplayName("[실패]: 2이미 대여중인 책입니다.")
+    void rentalBook_duplication2() {
+        // given
+        JoinMemberRequest joinMemberRequest1 = createJoinMemberRequestAll("b", "aaaa@gmail.com", "010-1111-1111");
+        Long memberId1 = memberService.addMember(joinMemberRequest1);
+        AddBookRequest addBookRequest1 = createAddBookRequest("JPA", "b-author", "b-publisher");
+        Long bookId = bookService.addBook(addBookRequest1);
+
+        RentBookRequest rentBookRequest1 = new RentBookRequest();
+        rentBookRequest1.setBookId(bookId);
+        rentBookRequest1.setMemberId(memberId1);
+        memberService.rentalBookV2(rentBookRequest1);
+
+        Loan loan = loanRepository.findAll().get(0);
+        loan.updateLoanStatus(LoanStatus.OVERDUE);
+
+        Exception ex = assertThrows(IllegalArgumentException.class, () ->
+            memberService.rentalBookV2(rentBookRequest1)
+        );
+
+        assertThat(ex.getMessage()).isEqualTo("이미 대여 중인 책입니다.");
+    }
+
+    @Test
+    @DisplayName("[실패]: 현재 사용자는 해당 책을 대여 하지 않은 상태입니다.")
+    void returnTo_notRentBook() {
+        // given
+        JoinMemberRequest joinMemberRequest1 = createJoinMemberRequestAll("b", "aaaa@gmail.com", "010-1111-1111");
+        Long memberId1 = memberService.addMember(joinMemberRequest1);
+        JoinMemberRequest joinMemberRequest2 = createJoinMemberRequestAll("z", "zzzz@gmail.com", "010-9999-999");
+        Long memberId2 = memberService.addMember(joinMemberRequest2);
+        AddBookRequest addBookRequest1 = createAddBookRequest("JPA", "b-author", "b-publisher");
+        Long bookId = bookService.addBook(addBookRequest1);
+
+        RentBookRequest rentBookRequest1 = new RentBookRequest();
+        rentBookRequest1.setBookId(bookId);
+        rentBookRequest1.setMemberId(memberId1);
+        memberService.rentalBookV2(rentBookRequest1);
+
+        RentBookRequest rentBookRequest2 = new RentBookRequest();
+        rentBookRequest2.setBookId(bookId);
+        rentBookRequest2.setMemberId(memberId2);
+
+        // when & then
+        Exception ex = assertThrows(IllegalArgumentException.class, () ->
+            memberService.returnBookV2(rentBookRequest2)
+        );
+
+        assertThat(ex.getMessage()).isEqualTo("현재 사용자는 해당 책을 대여 하지 않은 상태입니다.");
+    }
+
+    @Test
+    @DisplayName("[실패]: 2현재 사용자는 해당 책을 대여 하지 않은 상태입니다.")
+    void returnTo_notRentBook2() {
+        // given
+        JoinMemberRequest joinMemberRequest1 = createJoinMemberRequestAll("b", "aaaa@gmail.com", "010-1111-1111");
+        Long memberId1 = memberService.addMember(joinMemberRequest1);
+        JoinMemberRequest joinMemberRequest2 = createJoinMemberRequestAll("z", "zzzz@gmail.com", "010-9999-999");
+        Long memberId2 = memberService.addMember(joinMemberRequest2);
+        AddBookRequest addBookRequest1 = createAddBookRequest("JPA", "b-author", "b-publisher");
+        Long bookId = bookService.addBook(addBookRequest1);
+
+        RentBookRequest rentBookRequest1 = new RentBookRequest();
+        rentBookRequest1.setBookId(bookId);
+        rentBookRequest1.setMemberId(memberId1);
+        memberService.rentalBookV2(rentBookRequest1);
+
+        Loan loan = loanRepository.findAll().get(0);
+        loan.updateLoanStatus(LoanStatus.OVERDUE);
+
+        RentBookRequest rentBookRequest2 = new RentBookRequest();
+        rentBookRequest2.setBookId(bookId);
+        rentBookRequest2.setMemberId(memberId2);
+
+        // when & then
+        Exception ex = assertThrows(IllegalArgumentException.class, () ->
+            memberService.returnBookV2(rentBookRequest2)
+        );
+
+        assertThat(ex.getMessage()).isEqualTo("현재 사용자는 해당 책을 대여 하지 않은 상태입니다.");
+    }
+
+    @Test
+    @DisplayName("[성공]: 연체된 책 반납")
+    void returnTo_overdueBook() {
+        // given
+        JoinMemberRequest joinMemberRequest1 = createJoinMemberRequestAll("b", "aaaa@gmail.com", "010-1111-1111");
+        Long memberId1 = memberService.addMember(joinMemberRequest1);
+        AddBookRequest addBookRequest1 = createAddBookRequest("JPA", "b-author", "b-publisher");
+        Long bookId = bookService.addBook(addBookRequest1);
+
+        RentBookRequest rentBookRequest1 = new RentBookRequest();
+        rentBookRequest1.setBookId(bookId);
+        rentBookRequest1.setMemberId(memberId1);
+        memberService.rentalBookV2(rentBookRequest1);
+
+        Loan loan = loanRepository.findAll().get(0);
+        loan.updateLoanStatus(LoanStatus.OVERDUE);
+
+        // when
+        Long returnBookId = memberService.returnBookV2(rentBookRequest1);
+        Book book = bookRepository.findById(returnBookId).orElseThrow(
+                () -> new IllegalArgumentException("책을 찾을 수 없습니다.")
+        );
+
+        assertThat(book.getLoans()).hasSize(1)
+                .extracting("loanStatus")
+                .containsExactlyInAnyOrder(
+                        LoanStatus.RETURNED
+                );
+    }
+
+    @Test
+    @DisplayName("[실패]: 대여하지 않은 책 반납")
+    void returnTo_noneBook() {
+        // given
+        JoinMemberRequest joinMemberRequest1 = createJoinMemberRequestAll("b", "aaaa@gmail.com", "010-1111-1111");
+        Long memberId1 = memberService.addMember(joinMemberRequest1);
+        AddBookRequest addBookRequest1 = createAddBookRequest("JPA", "b-author", "b-publisher");
+        Long bookId = bookService.addBook(addBookRequest1);
+
+        RentBookRequest rentBookRequest1 = new RentBookRequest();
+        rentBookRequest1.setBookId(bookId);
+        rentBookRequest1.setMemberId(memberId1);
+        memberService.rentalBookV2(rentBookRequest1);
+
+        Loan loan = loanRepository.findAll().get(0);
+        loan.updateLoanStatus(LoanStatus.RETURNED);
+
+        // when & then
+        Exception ex = assertThrows(IllegalArgumentException.class, () ->
+            memberService.returnBookV2(rentBookRequest1)
+        );
+
+        assertThat(ex.getMessage()).isEqualTo("현재 사용자는 해당 책을 대여 하지 않은 상태입니다.");
+    }
+
+    @Test
+    @DisplayName("[실패]: 대여하지 않은 책 반납")
+    void returnTo_noneBook2() {
+        // given
+        JoinMemberRequest joinMemberRequest1 = createJoinMemberRequestAll("b", "aaaa@gmail.com", "010-1111-1111");
+        Long memberId1 = memberService.addMember(joinMemberRequest1);
+        AddBookRequest addBookRequest1 = createAddBookRequest("JPA", "b-author", "b-publisher");
+        Long bookId = bookService.addBook(addBookRequest1);
+        AddBookRequest addBookRequest2 = createAddBookRequest("Spring", "c-author", "c-publisher");
+        Long bookId2 = bookService.addBook(addBookRequest2);
+
+        RentBookRequest rentBookRequest1 = new RentBookRequest();
+        rentBookRequest1.setBookId(bookId);
+        rentBookRequest1.setMemberId(memberId1);
+        memberService.rentalBookV2(rentBookRequest1);
+
+        RentBookRequest rentBookRequest2 = new RentBookRequest();
+        rentBookRequest2.setBookId(bookId2);
+        rentBookRequest2.setMemberId(memberId1);
+
+        Loan loan = loanRepository.findAll().get(0);
+        loan.updateLoanStatus(LoanStatus.RETURNED);
+
+        // when & then
+        Exception ex = assertThrows(IllegalArgumentException.class, () ->
+            memberService.returnBookV2(rentBookRequest2)
+        );
+
+        assertThat(ex.getMessage()).isEqualTo("현재 사용자는 해당 책을 대여 하지 않은 상태입니다.");
     }
 
 
