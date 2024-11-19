@@ -1,27 +1,20 @@
 package book.rental.management.service;
 
-import book.rental.management.support.IntegrationTestSupport;
 import book.rental.management.domain.book.Book;
-import book.rental.management.repository.book.BookRepository;
 import book.rental.management.request.book.AddBookRequest;
 import book.rental.management.request.book.BookCondition;
 import book.rental.management.response.book.BookResponse;
+import book.rental.management.support.IntegrationTestSupport;
 import org.assertj.core.groups.Tuple;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 class BookServiceTest extends IntegrationTestSupport {
-
-    @Autowired
-    private BookService bookService;
-    @Autowired
-    private BookRepository bookRepository;
 
     @Test
     @DisplayName("[성공]: 책이 정상적으로 등록")
