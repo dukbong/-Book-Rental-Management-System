@@ -8,6 +8,7 @@ import book.rental.management.repository.member.MemberRepository;
 import book.rental.management.request.member.JoinMemberRequest;
 import book.rental.management.request.member.MemberCondition;
 import book.rental.management.request.member.RentBookRequest;
+import book.rental.management.response.member.AddMemberResponse;
 import book.rental.management.response.member.MemberResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -39,7 +40,7 @@ public class MemberService {
 
     // Member 등록
     @Transactional
-    public Long addMember(JoinMemberRequest request) {
+    public AddMemberResponse addMember(JoinMemberRequest request) {
         Optional<Member> findMember = memberRepository.findByName(request.getName());
         if(findMember.isPresent()) {
             throw new IllegalArgumentException("이미 존재하는 사용자 이름입니다.");
@@ -50,7 +51,7 @@ public class MemberService {
                 .phoneNumber(request.getPhoneNumber())
                 .build();
         memberRepository.save(member);
-        return member.getId();
+        return new AddMemberResponse(member.getId());
     }
 
     // Member -> Book 대여

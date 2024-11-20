@@ -2,6 +2,7 @@ package book.rental.management.controller.book;
 
 import book.rental.management.request.book.AddBookRequest;
 import book.rental.management.request.book.BookCondition;
+import book.rental.management.response.book.AddBookResponse;
 import book.rental.management.response.book.BookApiResponse;
 import book.rental.management.response.book.BookLoanResponse;
 import book.rental.management.response.book.BookResponse;
@@ -26,7 +27,8 @@ public class BookController {
     }
 
     @GetMapping("/api/v1/books/search")
-    public ResponseEntity<BookApiResponse<List<BookResponse>>> getBooksWithCondition(@RequestParam(value = "title", required = false) String title,
+    public ResponseEntity<BookApiResponse<List<BookResponse>>> getBooksWithCondition(
+                                                    @RequestParam(value = "title", required = false) String title,
                                                     @RequestParam(value = "author", required = false) String author,
                                                     @RequestParam(value = "publisher", required = false) String publisher) {
         BookCondition condition = new BookCondition(title, author, publisher);
@@ -35,9 +37,9 @@ public class BookController {
     }
 
     @PostMapping("/api/v1/book")
-    public ResponseEntity<BookApiResponse<Long>> addBook(@RequestBody @Valid AddBookRequest request) {
-        Long id = bookService.addBook(request);
-        return ResponseEntity.ok().body(new BookApiResponse<>(id));
+    public ResponseEntity<BookApiResponse<AddBookResponse>> addBook(@RequestBody @Valid AddBookRequest request) {
+        AddBookResponse result = bookService.addBook(request);
+        return ResponseEntity.ok().body(new BookApiResponse<>(result));
     }
 
     @GetMapping("/api/v1/book/{memberId}")

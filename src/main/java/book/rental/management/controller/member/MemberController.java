@@ -3,6 +3,7 @@ package book.rental.management.controller.member;
 import book.rental.management.request.member.JoinMemberRequest;
 import book.rental.management.request.member.MemberCondition;
 import book.rental.management.request.member.RentBookRequest;
+import book.rental.management.response.member.AddMemberResponse;
 import book.rental.management.response.member.MemberApiResponse;
 import book.rental.management.response.member.MemberResponse;
 import book.rental.management.service.MemberService;
@@ -26,7 +27,8 @@ public class MemberController {
     }
 
     @GetMapping("/api/v1/members/search")
-    public ResponseEntity<MemberApiResponse<List<MemberResponse>>> getMembersWithCondition(@RequestParam(value = "name", required = false) String name,
+    public ResponseEntity<MemberApiResponse<List<MemberResponse>>> getMembersWithCondition(
+                                                        @RequestParam(value = "name", required = false) String name,
                                                         @RequestParam(value = "email", required = false) String email,
                                                         @RequestParam(value = "phoneNumber", required = false) String phoneNumber) {
         MemberCondition condition = new MemberCondition(name, email, phoneNumber);
@@ -35,9 +37,9 @@ public class MemberController {
     }
 
     @PostMapping("/api/v1/member")
-    public ResponseEntity<MemberApiResponse<Long>> addMember(@RequestBody @Valid JoinMemberRequest request) {
-        Long memberId = memberService.addMember(request);
-        return ResponseEntity.ok().body(new MemberApiResponse<>(memberId));
+    public ResponseEntity<MemberApiResponse<AddMemberResponse>> addMember(@RequestBody @Valid JoinMemberRequest request) {
+        AddMemberResponse result = memberService.addMember(request);
+        return ResponseEntity.ok().body(new MemberApiResponse<>(result));
     }
 
     @PostMapping("/api/v1/member/rental")

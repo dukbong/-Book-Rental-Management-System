@@ -1,0 +1,54 @@
+[[select-all-member]]
+=== ✔ 전체 사용자 조회 API
+
+** 모든 사용자를 조회할 수 있다.
+
+==== HTTP Request
+include::{snippets}/get-members/http-request.adoc[]
+
+==== HTTP Response
+include::{snippets}/get-members/http-response.adoc[]
+include::{snippets}/get-members/response-fields.adoc[]
+
+'''
+
+[[select-all-member-empty]]
+=== 1) 등록된 사용자가 없는 경우 처리
+
+** 등록 된 사용자가 없는 경우도 조회가 가능하다.
+
+==== HTTP Request
+include::{snippets}/get-members-empty/http-request.adoc[]
+
+==== HTTP Response
+include::{snippets}/get-members-empty/http-response.adoc[]
+include::{snippets}/get-members-empty/response-fields.adoc[]
+
+'''
+
+[[select-condition-member]]
+=== ✔ 조건 별 사용자 조회 API
+
+** 등록 된 사용자를 조건( 이름, 이메일, 전화번호 )으로 조회할 수 있다. +
+예시) 이름('James Arthur Gosling')을 조건으로 조회
+
+==== HTTP Request
+include::{snippets}/get-members-with-condition/http-request.adoc[]
+
+==== HTTP Response
+include::{snippets}/get-members-with-condition/http-response.adoc[]
+include::{snippets}/get-members-with-condition/response-fields.adoc[
+
+'''
+
+[[select-condition-member-empty]]
+=== 1) 조건이 없는 경우 처리
+
+** 조건이 비어있는 경우 모든 사용자이 조회된다.
+
+==== Http Request
+include::{snippets}/get-members-with-condition-empty/http-request.adoc[]
+
+==== HTTP Response
+include::{snippets}/get-members-with-condition-empty/http-response.adoc[]
+include::{snippets}/get-members-with-condition-empty/response-fields.adoc[]

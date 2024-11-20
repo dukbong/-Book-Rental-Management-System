@@ -1,0 +1,72 @@
+[[Register-book]]
+=== ✔ 신규 책 등록 API
+
+** 신규 책을 등록할 수 있습니다.
+
+==== HTTP Request
+include::{snippets}/add-book/http-request.adoc[]
+include::{snippets}/add-book/request-fields.adoc[]
+
+==== HTTP Response
+include::{snippets}/add-book/http-response.adoc[]
+include::{snippets}/add-book/response-fields.adoc[]
+
+'''
+
+[[Book-title-required]]
+=== 1) 책 제목 필수 입력사항 확인
+
+** 책 제목이 누락된 경우 `400 Bad Request` 오류가 발생합니다.
+
+==== HTTP Request
+include::{snippets}/add-Book-required-with-title-exception/http-request.adoc[]
+include::{snippets}/add-Book-required-with-title-exception/request-fields.adoc[]
+
+==== HTTP Response
+include::{snippets}/add-Book-required-with-title-exception/http-response.adoc[]
+include::{snippets}/add-Book-required-with-title-exception/response-fields.adoc[]
+
+'''
+
+[[Book-author-required]]
+=== 2) 책 저자 필수 입력사항 확인
+
+** 책 저자가 누락된 경우 `400 Bad Request` 오류가 발생합니다.
+
+==== HTTP Request
+include::{snippets}/add-Book-required-with-author-exception/http-request.adoc[]
+include::{snippets}/add-Book-required-with-author-exception/request-fields.adoc[]
+
+==== HTTP Response
+include::{snippets}/add-Book-required-with-author-exception/http-response.adoc[]
+include::{snippets}/add-Book-required-with-author-exception/response-fields.adoc[]
+
+'''
+
+[[Book-publisher-required]]
+=== 3) 책 출판사 필수 입력사항 확인
+
+** 책 출판사가 누락된 경우 `400 Bad Request` 오류가 발생합니다.
+
+==== HTTP Request
+include::{snippets}/add-Book-required-with-publisher-exception/http-request.adoc[]
+include::{snippets}/add-Book-required-with-publisher-exception/request-fields.adoc[]
+
+==== HTTP Response
+include::{snippets}/add-Book-required-with-publisher-exception/http-response.adoc[]
+include::{snippets}/add-Book-required-with-publisher-exception/response-fields.adoc[]
+
+'''
+
+[[Book-All-required]]
+=== 4) 모든 유효성 검사 실패 시 응답 처리
+
+** 책 제목, 저자, 출판사 중 하나라도 누락된 경우 `400 Bad Request` 오류가 발생하며 누락된 필드에 대한 정보가 배열 형태로 반환됩니다.
+
+==== HTTP Request
+include::{snippets}/add-Book-required-with-all-exception/http-request.adoc[]
+include::{snippets}/add-Book-required-with-all-exception/request-fields.adoc[]
+
+==== HTTP Response
+include::{snippets}/add-Book-required-with-all-exception/http-response.adoc[]
+include::{snippets}/add-Book-required-with-all-exception/response-fields.adoc[]

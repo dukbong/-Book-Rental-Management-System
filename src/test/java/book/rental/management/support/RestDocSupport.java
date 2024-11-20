@@ -1,7 +1,9 @@
-package book.rental.management.docs;
+package book.rental.management.support;
 
 import book.rental.management.controller.book.BookController;
+import book.rental.management.controller.member.MemberController;
 import book.rental.management.service.BookService;
+import book.rental.management.service.MemberService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -18,7 +20,8 @@ import org.springframework.web.context.WebApplicationContext;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
 
 @WebMvcTest(controllers = {
-        BookController.class
+        BookController.class,
+        MemberController.class
 })
 @ExtendWith({RestDocumentationExtension.class, SpringExtension.class})
 public abstract class RestDocSupport {
@@ -29,6 +32,8 @@ public abstract class RestDocSupport {
     protected ObjectMapper objectMapper;
     @MockBean
     protected BookService bookService;
+    @MockBean
+    protected MemberService memberService;
 
     @BeforeEach
     void setup(WebApplicationContext webApplicationContext, RestDocumentationContextProvider restDocumentation) {

@@ -1,0 +1,100 @@
+[[Register-Member]]
+=== ✔ 신규 사용자 등록 API
+
+** 신규 사용자를 등록할 수 있습니다.
+
+==== HTTP Request
+include::{snippets}/add-member/http-request.adoc[]
+include::{snippets}/add-member/request-fields.adoc[]
+
+==== HTTP Response
+include::{snippets}/add-member/http-response.adoc[]
+include::{snippets}/add-member/response-fields.adoc[]
+
+'''
+
+[[Member-name-required]]
+=== 1) 사용자 이름 필수 입력사항
+
+** 사용자 이름이 누락된 경우 `400 Bad Request` 오류가 발생한다.
+
+==== HTTP Request
+include::{snippets}/add-member-with-name-exception/http-request.adoc[]
+include::{snippets}/add-member-with-name-exception/request-fields.adoc[]
+
+==== HTTP Response
+include::{snippets}/add-member-with-name-exception/http-response.adoc[]
+include::{snippets}/add-member-with-name-exception/response-fields.adoc[]
+
+'''
+
+[[Member-email-nullable]]
+=== 2) 사용자 이메일 선택사항
+
+** 사용자 이메일은 선택사항으로 누락되어도 등록할 수 있습니다.
+
+==== HTTP Request
+include::{snippets}/add-member-null-email/http-request.adoc[]
+include::{snippets}/add-member-null-email/request-fields.adoc[]
+
+==== HTTP Response
+include::{snippets}/add-member-null-email/http-response.adoc[]
+include::{snippets}/add-member-null-email/response-fields.adoc[]
+
+'''
+
+[[Member-email-validation]]
+=== 2-1) 사용자 이메일 형식 검증
+
+** 사용자 이메일 입력 시 형식을 지키지 않으면 `400 Bad Request` 오류가 발생한다.
+
+==== HTTP Request
+include::{snippets}/add-member-with-email-exception/http-request.adoc[]
+include::{snippets}/add-member-with-email-exception/request-fields.adoc[]
+
+==== HTTP Response
+include::{snippets}/add-member-with-email-exception/http-response.adoc[]
+include::{snippets}/add-member-with-email-exception/response-fields.adoc[]
+
+'''
+
+[[Member-phoneNumber-nullable]]
+=== 3) 사용자 전화번호 선택사항
+
+** 사용자 전화번호는 선택사항으로 누락되어도 등록할 수 있습니다.
+
+==== HTTP Request
+include::{snippets}/add-member-null-phone-number/http-request.adoc[]
+include::{snippets}/add-member-null-phone-number/request-fields.adoc[]
+
+==== HTTP Response
+include::{snippets}/add-member-null-phone-number/http-response.adoc[]
+include::{snippets}/add-member-null-phone-number/response-fields.adoc[
+
+'''
+
+[[Member-phoneNumber-validation]]
+=== 3-1) 사용자 전화번호 형식 검증
+
+** 사용자 전화번호 입력 시 형식을 지키지 않으면 `400 Bad Request` 오류가 발생한다.
+
+==== HTTP Request
+include::{snippets}/add-member-with-phone-number-exception/http-request.adoc[]
+include::{snippets}/add-member-with-phone-number-exception/request-fields.adoc[]
+
+==== HTTP Response
+include::{snippets}/add-member-with-phone-number-exception/http-response.adoc[]
+include::{snippets}/add-member-with-phone-number-exception/response-fields.adoc[]
+
+[[Member-all-validation]]
+=== 4) 모든 유효성 검사 실패 시 응답 처리
+
+** 사용자 이름이 없으며, 이메일과 전화번호는 형식이 어긋날 경우 `400 Bad Request` 오류가 발생한다.
+
+==== HTTP Request
+include::{snippets}/add-member-with-all-exception/http-request.adoc[]
+include::{snippets}/add-member-with-all-exception/request-fields.adoc[]
+
+==== HTTP Response
+include::{snippets}/add-member-with-all-exception/http-response.adoc[]
+include::{snippets}/add-member-with-all-exception/response-fields.adoc[]

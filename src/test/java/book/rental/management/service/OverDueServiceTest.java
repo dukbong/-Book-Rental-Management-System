@@ -3,6 +3,7 @@ package book.rental.management.service;
 import book.rental.management.domain.loan.Loan;
 import book.rental.management.domain.loan.LoanStatus;
 import book.rental.management.repository.loan.LoanRepository;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -27,6 +28,7 @@ class OverDueServiceTest {
     private OverDueService overDueService;
 
     @Test
+    @DisplayName("매일 자정 연체 정보를 확인 후 대여 상태를 변경한다.")
     void overDueServiceTest() {
         // given
         Loan loan = Loan.builder()

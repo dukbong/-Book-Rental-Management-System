@@ -1,0 +1,100 @@
+[[select-all-book]]
+=== ✔ 전체 책 조회 API
+
+** 모든 책을 조회할 수 있다.
+
+==== HTTP Request
+include::{snippets}/get-books/http-request.adoc[]
+
+==== HTTP Response
+include::{snippets}/get-books/http-response.adoc[]
+include::{snippets}/get-books/response-fields.adoc[]
+
+'''
+
+[[select-all-book-empty]]
+=== 1) 등록된 책 없는 경우 처리
+
+** 등록 된 책이 없는 경우도 조회가 가능하다.
+
+==== Http Request
+include::{snippets}/get-books-empty/http-request.adoc[]
+
+==== HTTP Response
+include::{snippets}/get-books-empty/http-response.adoc[]
+include::{snippets}/get-books-empty/response-fields.adoc[]
+
+'''
+
+[[select-condition-book]]
+=== ✔ 조건 별 책 조회 API
+
+** 등록 된 책을 조건( 책 제목, 저자, 출판사 )으로 조회할 수 있다. +
+예시) 제목(' '),저자('Kim')를 조건으로 조회
+
+==== Http Request
+include::{snippets}/get-books-with-condition/http-request.adoc[]
+
+==== HTTP Response
+include::{snippets}/get-books-with-condition/http-response.adoc[]
+include::{snippets}/get-books-with-condition/response-fields.adoc[]
+
+'''
+
+[[select-condition-book-empty]]
+=== 1) 조건이 없는 경우 처리
+
+** 조건이 비어있는 경우 모든 책이 조회된다. +
+예시) 제목(' '), 저자(' '), 출판사(' ')를 조건으로 조회
+
+==== Http Request
+include::{snippets}/get-books-with-condition-empty/http-request.adoc[]
+
+==== HTTP Response
+include::{snippets}/get-books-with-condition-empty/http-response.adoc[]
+include::{snippets}/get-books-with-condition-empty/response-fields.adoc[]
+
+'''
+[[select-loan-list]]
+=== ✔ 사용자 별 대여 현황 조회 API
+
+** 사용자의 ID를 이용하여 대여 현황을 조회할 수 있다. +
+예시) 사용자 ID = 1
+
+==== Http Request
+include::{snippets}/loan-list/http-request.adoc[]
+
+==== HTTP Response
+include::{snippets}/loan-list/http-response.adoc[]
+include::{snippets}/loan-list/response-fields.adoc[]
+
+'''
+
+[[loan-status-enum]]
+=== 1) 대여 상태 설명 제공
+
+** 대여 상태는 아래와 같습니다:
+
+[cols="1,2", options="header"]
+|===
+| 상태 값 | 설명
+| ON_TIME | 정상 대여 상태
+| OVERDUE | 연체 상태
+| RETURNED | 반납 완료 상태
+|===
+
+'''
+
+[[select-loan-list-empty]]
+=== 2) 대여 현황이 없는 경우 처리
+
+** 사용자의 ID를 이용하여 대여 현황을 조회할 수 있다. +
+예시) 사용자 ID = 1
+
+==== Http Request
+include::{snippets}/loan-list-empty/http-request.adoc[]
+
+==== HTTP Response
+include::{snippets}/loan-list-empty/http-response.adoc[]
+include::{snippets}/loan-list-empty/response-fields.adoc[]
+

@@ -4,7 +4,7 @@ import book.rental.management.support.IntegrationTestSupport;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
-class ManagementApplicationTests extends IntegrationTestSupport {
+class ManagementApplicationTests {
 
 	@Test
 	void contextLoads() {

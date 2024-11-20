@@ -7,6 +7,7 @@ import book.rental.management.repository.book.BookRepository;
 import book.rental.management.repository.member.MemberRepository;
 import book.rental.management.request.book.AddBookRequest;
 import book.rental.management.request.book.BookCondition;
+import book.rental.management.response.book.AddBookResponse;
 import book.rental.management.response.book.BookLoanResponse;
 import book.rental.management.response.book.BookResponse;
 import lombok.RequiredArgsConstructor;
@@ -26,7 +27,7 @@ public class BookService {
 
     // Book 등록
     @Transactional
-    public Long addBook(AddBookRequest request) {
+    public AddBookResponse addBook(AddBookRequest request) {
         boolean bookCheck = bookRepository.existsByTitleAndAuthorAndPublisher(request.getTitle(), request.getAuthor(), request.getPublisher());
         if (bookCheck) {
             throw new IllegalArgumentException("이미 등록된 책입니다.");
@@ -37,7 +38,7 @@ public class BookService {
                 .publisher(request.getPublisher())
                 .build();
         bookRepository.save(book);
-        return book.getId();
+        return new AddBookResponse(book.getId());
     }
 
     // 전체 book 조회

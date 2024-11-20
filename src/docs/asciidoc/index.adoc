@@ -1,0 +1,23 @@
+ifndef::snippets[]
+:snippets: ../../build/generated-snippets
+endif::[]
+= 도서 관리 시스템 API
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 2
+:sectlinks:
+
+[[ADD-BOOK-API]]
+== 책 등록 관련 API
+include::api/book/addBook.adoc[]
+[[GET-BOOKS-API]]
+== 책 조회 관련 API
+include::api/book/getBooks.adoc[]
+[[ADD-MEMBER-API]]
+== 사용자 등록 관련 API
+include::api/member/addMember.adoc[]
+[[GET-MEMBERS-API]]
+== 사용자 조회 관련 API
+include::api/member/getMembers.adoc[]
