@@ -40,17 +40,10 @@ jobs:
     - name: Setup Gradle
       uses: gradle/actions/setup-gradle@v4
 
-    # Run tests with info flag for detailed output
+    # Run tests and show only failed tests
     - name: Run Tests
-      run: ./gradlew clean test --info
+      run: ./gradlew clean test --info | grep -A 10 "FAILED" 
 
     # Build the project
     - name: Build with Gradle Wrapper
       run: ./gradlew build
-
-    # Upload test reports as an artifact
-    - name: Upload Test Reports
-      uses: actions/upload-artifact@v3
-      with:
-        name: test-reports
-        path: build/reports/tests/test/index.html
