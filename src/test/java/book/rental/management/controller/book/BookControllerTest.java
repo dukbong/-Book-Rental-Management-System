@@ -123,7 +123,7 @@ class BookControllerTest extends ControllerTestSupport {
 
         @Test
         @DisplayName("[성공 - offset:-1 & limit:-2] 알맞는 값이 아닌 경우 기본값으로 조회된다.")
-        void rankBook_offset_m1_limit_m2() throws Exception {
+        void rankBook_offset_m1_limit_m2() throws Exception { 
             // given
             RankBookResponse response1 = new RankBookResponse("A", "A-author", "A-publisher", 1, 20);
             RankBookResponse response2 = new RankBookResponse("B", "B-author", "B-publisher", 2, 10);
