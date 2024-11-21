@@ -8,7 +8,6 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -24,9 +23,18 @@ jobs:
         java-version: '17'
         distribution: 'temurin'
 
+    # Cache Gradle dependencies to improve build times
+    - name: Cache Gradle dependencies
+      uses: actions/cache@v3
+      with:
+        path: ~/.gradle/caches
+        key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+        restore-keys: |
+          ${{ runner.os }}-gradle-
+
     # Set up Gradle
     - name: Setup Gradle
-      uses: gradle/actions/setup-gradle@af1da67850ed9a4cedd57bfd976089dd991e2582 # v4.0.0
+      uses: gradle/actions/setup-gradle@v4
 
     # Run tests
     - name: Run Tests
@@ -37,7 +45,6 @@ jobs:
       run: ./gradlew build
 
   dependency-submission:
-
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -53,6 +60,15 @@ jobs:
         java-version: '17'
         distribution: 'temurin'
 
+    # Cache Gradle dependencies
+    - name: Cache Gradle dependencies
+      uses: actions/cache@v3
+      with:
+        path: ~/.gradle/caches
+        key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+        restore-keys: |
+          ${{ runner.os }}-gradle-
+
     # Generate and submit dependency graph
     - name: Generate and submit dependency graph
-      uses: gradle/actions/dependency-submission@af1da67850ed9a4cedd57bfd976089dd991e2582 # v4.0.0
+      uses: gradle/actions/dependency-submission@v4
