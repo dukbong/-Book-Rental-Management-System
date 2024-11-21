@@ -40,9 +40,9 @@ jobs:
     - name: Setup Gradle
       uses: gradle/actions/setup-gradle@v4
 
-    # Run tests and show only failed tests
+    # Run tests
     - name: Run Tests
-      run: ./gradlew clean test --info | grep -A 10 "FAILED" 
+      run: ./gradlew clean test
 
     # Build the project
     - name: Build with Gradle Wrapper
