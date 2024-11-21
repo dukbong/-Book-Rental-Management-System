@@ -27,7 +27,6 @@ public class BookControllerGetBooksWithConditionTest extends RestDocSupport {
     void getBooksWithCondition() throws Exception {
         // given
         BookResponse response1 = new BookResponse("JPA", "kim", "인프런");
-        BookResponse response2 = new BookResponse("Spring", "Park", "유튜브");
         BookResponse response3 = new BookResponse("QueryDSL", "Kim", "인프런");
 
         BookCondition bookCondition = new BookCondition("", "Kim",null);

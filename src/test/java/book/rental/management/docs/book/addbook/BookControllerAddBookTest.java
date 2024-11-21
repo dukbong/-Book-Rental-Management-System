@@ -30,8 +30,6 @@ public class BookControllerAddBookTest extends RestDocSupport {
 
         AddBookResponse addBookResponse = new AddBookResponse(1L);
 
-        Long bookId = 1L;
-
         when(bookService.addBook(addBookRequest)).thenReturn(addBookResponse);
 
         // when & then

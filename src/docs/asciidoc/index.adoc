@@ -21,3 +21,8 @@ include::api/member/addMember.adoc[]
 [[GET-MEMBERS-API]]
 == 사용자 조회 관련 API
 include::api/member/getMembers.adoc[]
+[[RENTAL-BOOK-MEMBER]]
+== 책 대여 관련 API
+include::api/member/rental.adoc[]
+== 책 반납 관련 API
+include::api/member/return.adoc[]

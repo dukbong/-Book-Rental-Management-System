@@ -1,6 +1,5 @@
 package book.rental.management.docs.member.getmembers;
 
-import book.rental.management.response.member.MemberResponse;
 import book.rental.management.support.RestDocSupport;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

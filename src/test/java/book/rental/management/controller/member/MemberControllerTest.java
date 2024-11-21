@@ -5,6 +5,8 @@ import book.rental.management.request.member.MemberCondition;
 import book.rental.management.request.member.RentBookRequest;
 import book.rental.management.response.member.AddMemberResponse;
 import book.rental.management.response.member.MemberResponse;
+import book.rental.management.response.member.RentalBookResponse;
+import book.rental.management.response.member.ReturnBookResponse;
 import book.rental.management.support.ControllerTestSupport;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.DisplayName;
@@ -195,12 +197,14 @@ class MemberControllerTest extends ControllerTestSupport {
             // given
             Long bookId = 1L;
 
+            RentalBookResponse response = new RentalBookResponse(bookId);
+
             RentBookRequest rentBookRequest = new RentBookRequest();
             rentBookRequest.setMemberId(1L);
             rentBookRequest.setBookId(1L);
 
             // when
-            when(memberService.rentalBookV2(rentBookRequest)).thenReturn(bookId);
+            when(memberService.rentalBookV2(rentBookRequest)).thenReturn(response);
 
             // then
             mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/member/rental")
@@ -208,7 +212,7 @@ class MemberControllerTest extends ControllerTestSupport {
                             .contentType(MediaType.APPLICATION_JSON))
                     .andDo(MockMvcResultHandlers.print())
                     .andExpect(MockMvcResultMatchers.status().isOk())
-                    .andExpect(jsonPath("$.data").value(bookId))
+                    .andExpect(jsonPath("$.data.id").value(bookId))
             ;
         }
     }
@@ -222,20 +226,22 @@ class MemberControllerTest extends ControllerTestSupport {
             // given
             Long bookId = 1L;
 
+            ReturnBookResponse response = new ReturnBookResponse(bookId);
+
             RentBookRequest rentBookRequest = new RentBookRequest();
             rentBookRequest.setMemberId(1L);
             rentBookRequest.setBookId(1L);
 
             // when
-            when(memberService.returnBookV2(rentBookRequest)).thenReturn(bookId);
+            when(memberService.returnBookV2(rentBookRequest)).thenReturn(response);
 
             // then
-            mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/member/retrun")
+            mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/member/return")
                             .content(objectMapper.writeValueAsString(rentBookRequest))
                             .contentType(MediaType.APPLICATION_JSON))
                     .andDo(MockMvcResultHandlers.print())
                     .andExpect(MockMvcResultMatchers.status().isOk())
-                    .andExpect(jsonPath("$.data").value(bookId))
+                    .andExpect(jsonPath("$.data.id").value(bookId))
             ;
         }
     }

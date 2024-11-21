@@ -1,7 +1,5 @@
 package book.rental.management.docs.book.loanlist;
 
-import book.rental.management.domain.loan.LoanStatus;
-import book.rental.management.response.book.BookLoanResponse;
 import book.rental.management.support.RestDocSupport;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -11,7 +9,6 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.mockito.Mockito.when;

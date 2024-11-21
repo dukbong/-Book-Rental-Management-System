@@ -14,6 +14,8 @@ import book.rental.management.response.book.AddBookResponse;
 import book.rental.management.response.book.BookLoanResponse;
 import book.rental.management.response.member.AddMemberResponse;
 import book.rental.management.response.member.MemberResponse;
+import book.rental.management.response.member.RentalBookResponse;
+import book.rental.management.response.member.ReturnBookResponse;
 import book.rental.management.support.IntegrationTestSupport;
 import org.assertj.core.groups.Tuple;
 import org.junit.jupiter.api.Assertions;
@@ -292,10 +294,10 @@ class MemberServiceTest extends IntegrationTestSupport {
             rentBookRequest.setMemberId(memberResult.getId());
 
             // when
-            Long rentBookId = memberService.rentalBookV2(rentBookRequest);
+            RentalBookResponse rentResult = memberService.rentalBookV2(rentBookRequest);
 
             // then
-            Book rentBook = bookRepository.findById(rentBookId).orElseThrow(
+            Book rentBook = bookRepository.findById(rentResult.getId()).orElseThrow(
                     () -> new IllegalArgumentException("책을 찾을 수 없습니다.")
             );
 
@@ -333,9 +335,9 @@ class MemberServiceTest extends IntegrationTestSupport {
             rentBookRequest2.setMemberId(result2.getId());
 
             // when
-            Long rentBookId = memberService.rentalBookV2(rentBookRequest2);
+            RentalBookResponse rentResult = memberService.rentalBookV2(rentBookRequest2);
             // then
-            Book rentBook = bookRepository.findById(rentBookId).orElseThrow(
+            Book rentBook = bookRepository.findById(rentResult.getId()).orElseThrow(
                     () -> new IllegalArgumentException("책을 찾을 수 없습니다.")
             );
 
@@ -464,10 +466,10 @@ class MemberServiceTest extends IntegrationTestSupport {
             memberService.rentalBookV2(rentBookRequest);
 
             // when
-            Long findBookId = memberService.returnBookV2(rentBookRequest);
+            ReturnBookResponse returnResult = memberService.returnBookV2(rentBookRequest);
 
             // then
-            Book book = bookRepository.findById(findBookId).orElseThrow(
+            Book book = bookRepository.findById(returnResult.getId()).orElseThrow(
                     () -> new IllegalArgumentException("책을 찾을 수 없습니다.")
             );
             assertThat(book.getLoans()).hasSize(1)
@@ -495,8 +497,10 @@ class MemberServiceTest extends IntegrationTestSupport {
             loan.updateLoanStatus(LoanStatus.OVERDUE);
 
             // when
-            Long returnBookId = memberService.returnBookV2(rentBookRequest1);
-            Book book = bookRepository.findById(returnBookId).orElseThrow(
+            ReturnBookResponse returnResult =  memberService.returnBookV2(rentBookRequest1);
+
+            // then
+            Book book = bookRepository.findById(returnResult.getId()).orElseThrow(
                     () -> new IllegalArgumentException("책을 찾을 수 없습니다.")
             );
 

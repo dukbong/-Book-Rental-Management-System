@@ -1,0 +1,42 @@
+[[member-return-book]]
+=== ✔ 책 반납 API
+
+** 사용자는 책을 반납할 수 있다.
+
+==== HTTP Request
+include::{snippets}/return-book-success/http-request.adoc[]
+include::{snippets}/return-book-success/request-fields.adoc[]
+
+==== HTTP Response
+include::{snippets}/return-book-success/http-response.adoc[]
+include::{snippets}/return-book-success/response-fields.adoc[]
+
+'''
+
+[[member-return-book-empty-memberId]]
+=== 1) 반납할 사용자 ID 필수 사항
+
+** 사용자 ID가 누락된 경우 `400 Bad Request` 오류가 발생한다.
+
+==== HTTP Request
+include::{snippets}/return-book-fail-empty-member-id/http-request.adoc[]
+include::{snippets}/return-book-fail-empty-member-id/request-fields.adoc[]
+
+==== HTTP Response
+include::{snippets}/return-book-fail-empty-member-id/http-response.adoc[]
+include::{snippets}/return-book-fail-empty-member-id/response-fields.adoc[]
+
+'''
+
+[[member-return-book-empty-bookId]]
+=== 2) 반납할 책 ID 필수 사항
+
+** 책 ID가 누락된 경우 `400 Bad Request` 오류가 발생한다.
+
+==== HTTP Request
+include::{snippets}/return-book-fail-empty-book-id/http-request.adoc[]
+include::{snippets}/return-book-fail-empty-book-id/request-fields.adoc[]
+
+==== HTTP Response
+include::{snippets}/return-book-fail-empty-book-id/http-response.adoc[]
+include::{snippets}/return-book-fail-empty-book-id/response-fields.adoc[]

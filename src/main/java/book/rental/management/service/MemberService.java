@@ -10,6 +10,8 @@ import book.rental.management.request.member.MemberCondition;
 import book.rental.management.request.member.RentBookRequest;
 import book.rental.management.response.member.AddMemberResponse;
 import book.rental.management.response.member.MemberResponse;
+import book.rental.management.response.member.RentalBookResponse;
+import book.rental.management.response.member.ReturnBookResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -82,14 +84,14 @@ public class MemberService {
 
 //  V2 ==> DDD 설계 방식으로 변경
     @Transactional
-    public Long rentalBookV2(RentBookRequest request) {
+    public RentalBookResponse rentalBookV2(RentBookRequest request) {
         Member member = memberRepository.findById(request.getMemberId()).orElseThrow(
                 () -> new IllegalArgumentException("사용자를 찾을 수 없습니다.")
         );
         Book book = bookRepository.findById(request.getBookId()).orElseThrow(
                 () -> new IllegalArgumentException("책을 찾을 수 없습니다.")
         );
-        return member.rentTo(book);
+        return new RentalBookResponse(member.rentTo(book));
     }
 
     // Member -> Book 반납
@@ -117,14 +119,14 @@ public class MemberService {
 
 //  V2 ==> DDD 설계 방식으로 변경
     @Transactional
-    public Long returnBookV2(RentBookRequest request) {
+    public ReturnBookResponse returnBookV2(RentBookRequest request) {
         Member member = memberRepository.findById(request.getMemberId()).orElseThrow(
                 () -> new IllegalArgumentException("사용자를 찾을 수 없습니다.")
         );
         Book book = bookRepository.findById(request.getBookId()).orElseThrow(
                 () -> new IllegalArgumentException("책을 찾을 수 없습니다.")
         );
-        return member.returnTo(book);
+        return new ReturnBookResponse(member.returnTo(book));
     }
 
     private List<MemberResponse> convertResponse(List<Member> members) {
