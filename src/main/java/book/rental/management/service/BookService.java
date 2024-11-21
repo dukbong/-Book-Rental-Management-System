@@ -6,11 +6,13 @@ import book.rental.management.repository.book.BookQueryDslRepository;
 import book.rental.management.repository.book.BookRepository;
 import book.rental.management.repository.member.MemberRepository;
 import book.rental.management.request.book.AddBookRequest;
-import book.rental.management.request.book.BookCondition;
+import book.rental.management.dto.BookCondition;
 import book.rental.management.response.book.AddBookResponse;
 import book.rental.management.response.book.BookLoanResponse;
 import book.rental.management.response.book.BookResponse;
+import book.rental.management.response.book.RankBookResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -70,4 +72,15 @@ public class BookService {
                 )).toList();
     }
 
+    // 페이징 처리
+    public List<RankBookResponse> rankBook(Pageable pageable) {
+        List<Book> ranking = bookQueryDslRepository.getBookByRank(pageable);
+        return ranking.stream()
+                .map(book -> new RankBookResponse(
+                        book.getTitle(),
+                        book.getAuthor(),
+                        book.getPublisher(),
+                        book.getRentalCount()
+                )).toList();
+    }
 }

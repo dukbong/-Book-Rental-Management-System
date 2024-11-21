@@ -1,4 +1,4 @@
-package book.rental.management.request.book;
+package book.rental.management.dto;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;

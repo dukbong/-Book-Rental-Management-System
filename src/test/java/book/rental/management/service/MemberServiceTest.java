@@ -8,7 +8,7 @@ import book.rental.management.repository.loan.LoanRepository;
 import book.rental.management.repository.member.MemberRepository;
 import book.rental.management.request.book.AddBookRequest;
 import book.rental.management.request.member.JoinMemberRequest;
-import book.rental.management.request.member.MemberCondition;
+import book.rental.management.dto.MemberCondition;
 import book.rental.management.request.member.RentBookRequest;
 import book.rental.management.response.book.AddBookResponse;
 import book.rental.management.response.book.BookLoanResponse;
@@ -350,6 +350,36 @@ class MemberServiceTest extends IntegrationTestSupport {
             assertThat(rentBook.getLoans().get(0).getMember().getName()).isEqualTo("b");
             assertThat(rentBook.getLoans().get(0).getMember().getEmail()).isEqualTo("aaaa@gmail.com");
         }
+
+        @Test
+        @DisplayName("[성공]: 대여할 경우 해당 책의 대여 횟수가 증가한다.")
+        void increaseRentalCountSuccess() {
+            // given
+            JoinMemberRequest joinMemberRequest1 = createJoinMemberRequestAll("b", "aaaa@gmail.com", "010-1111-1111");
+            AddMemberResponse memberResult = memberService.addMember(joinMemberRequest1);
+            AddBookRequest addBookRequest1 = createAddBookRequest("JPA", "김영한", "인프런");
+            AddBookResponse bookResult1 = bookService.addBook(addBookRequest1);
+            AddBookRequest addBookRequest2 = createAddBookRequest("Spring", "남궁성", "유튜브");
+            AddBookResponse bookResult2 = bookService.addBook(addBookRequest2);
+
+            RentBookRequest rentBookRequest = new RentBookRequest();
+            rentBookRequest.setMemberId(memberResult.getId());
+            rentBookRequest.setBookId(bookResult1.getId());
+
+            // when
+            RentalBookResponse response = memberService.rentalBookV2(rentBookRequest);
+
+            // then
+            Book targetBook1 = bookRepository.findById(response.getId()).orElseThrow(
+                    () -> new IllegalArgumentException("책을 찾을 수 없습니다.")
+            );
+            Book targetBook2 = bookRepository.findById(bookResult2.getId()).orElseThrow(
+                    () -> new IllegalArgumentException("책을 찾을 수 없습니다.")
+            );
+
+            assertThat(targetBook1.getRentalCount()).isEqualTo(1);
+            assertThat(targetBook2.getRentalCount()).isEqualTo(0);
+        }
     }
 
     @Nested
@@ -445,6 +475,42 @@ class MemberServiceTest extends IntegrationTestSupport {
             );
 
             assertThat(ex.getMessage()).isEqualTo("이미 대여 중인 책입니다.");
+        }
+
+        @Test
+        @DisplayName("[실패]: 대여하는데 실패한 경우 대여 횟수가 증가하지 않는다.")
+        void increaseRentalCountFail() {
+            // given
+            JoinMemberRequest joinMemberRequest1 = createJoinMemberRequestAll("b", "aaaa@gmail.com", "010-1111-1111");
+            AddMemberResponse memberResult1 = memberService.addMember(joinMemberRequest1);
+            JoinMemberRequest joinMemberRequest2 = createJoinMemberRequestAll("c", "bbbb@gmail.com", "010-2222-2222");
+            AddMemberResponse memberResult2 = memberService.addMember(joinMemberRequest2);
+            AddBookRequest addBookRequest1 = createAddBookRequest("JPA", "김영한", "인프런");
+            AddBookResponse bookResult1 = bookService.addBook(addBookRequest1);
+            AddBookRequest addBookRequest2 = createAddBookRequest("Spring", "남궁성", "유튜브");
+            AddBookResponse bookResult2 = bookService.addBook(addBookRequest2);
+
+            RentBookRequest rentBookRequest1 = new RentBookRequest();
+            rentBookRequest1.setMemberId(memberResult1.getId());
+            rentBookRequest1.setBookId(bookResult1.getId());
+            memberService.rentalBookV2(rentBookRequest1);
+
+            RentBookRequest rentBookRequest2 = new RentBookRequest();
+            rentBookRequest2.setMemberId(memberResult2.getId());
+            rentBookRequest2.setBookId(bookResult1.getId());
+
+            // when && then
+            Exception e = assertThrows(IllegalArgumentException.class, () -> memberService.rentalBookV2(rentBookRequest2));
+            assertThat(e.getMessage()).isEqualTo("이미 대여 중인 책입니다.");
+
+            Book book1 = bookRepository.findById(bookResult1.getId()).orElseThrow(
+                    () -> new IllegalArgumentException("책을 찾을 수 없습니다.")
+            );
+            Book book2 = bookRepository.findById(bookResult2.getId()).orElseThrow(
+                    () -> new IllegalArgumentException("책을 찾을 수 없습니다.")
+            );
+            assertThat(book1.getRentalCount()).isEqualTo(1);
+            assertThat(book2.getRentalCount()).isEqualTo(0);
         }
     }
 

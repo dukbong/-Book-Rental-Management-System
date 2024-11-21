@@ -32,6 +32,8 @@ public class Book extends Base {
     @Column(nullable = false)
     private String publisher;
 
+    private int rentalCount;
+
     @OneToMany(mappedBy = "book", cascade = CascadeType.ALL)
     private List<Loan> loans = new ArrayList<>();
 
@@ -53,5 +55,9 @@ public class Book extends Base {
 
     public void addLoan(Loan loan) {
         this.loans.add(loan);
+    }
+
+    public void increaseRentalCount() {
+        this.rentalCount++;
     }
 }

@@ -2,7 +2,7 @@ package book.rental.management.repository.member;
 
 import book.rental.management.domain.member.Member;
 import book.rental.management.domain.member.QMember;
-import book.rental.management.request.member.MemberCondition;
+import book.rental.management.dto.MemberCondition;
 import com.querydsl.core.types.Predicate;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;

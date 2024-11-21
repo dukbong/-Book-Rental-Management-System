@@ -2,7 +2,7 @@ package book.rental.management.controller.book;
 
 import book.rental.management.domain.loan.LoanStatus;
 import book.rental.management.request.book.AddBookRequest;
-import book.rental.management.request.book.BookCondition;
+import book.rental.management.dto.BookCondition;
 import book.rental.management.response.book.AddBookResponse;
 import book.rental.management.response.book.BookLoanResponse;
 import book.rental.management.response.book.BookResponse;

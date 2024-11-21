@@ -1,6 +1,6 @@
 package book.rental.management.docs.book.getbooks.condition;
 
-import book.rental.management.request.book.BookCondition;
+import book.rental.management.dto.BookCondition;
 import book.rental.management.response.book.BookResponse;
 import book.rental.management.support.RestDocSupport;
 import org.junit.jupiter.api.DisplayName;

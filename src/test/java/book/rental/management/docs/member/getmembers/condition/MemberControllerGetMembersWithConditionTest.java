@@ -1,6 +1,6 @@
 package book.rental.management.docs.member.getmembers.condition;
 
-import book.rental.management.request.member.MemberCondition;
+import book.rental.management.dto.MemberCondition;
 import book.rental.management.response.member.MemberResponse;
 import book.rental.management.support.RestDocSupport;
 import org.junit.jupiter.api.DisplayName;

@@ -50,6 +50,7 @@ public class Member extends Base {
         Loan loan = Loan.createLoan(LocalDateTime.now(), LocalDateTime.now().plusDays(7), LoanStatus.ON_TIME, this, book);
         this.loans.add(loan);
         book.addLoan(loan);
+        book.increaseRentalCount();
         return book.getId();
     }
 

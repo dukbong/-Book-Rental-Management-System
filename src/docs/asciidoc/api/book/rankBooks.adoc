@@ -1,0 +1,70 @@
+[[rank-book]]
+=== ✔ 책 대여 순위 API
+
+** 책들의 대여 횟수를 이용해서 순위를 조회할 수 있습니다.
+
+==== HTTP Request
+include::{snippets}/rank-book/http-request.adoc[]
+
+==== HTTP Response
+include::{snippets}/rank-book/http-response.adoc[]
+include::{snippets}/rank-book/response-fields.adoc[]
+
+'''
+
+[[rank-book-paging1]]
+=== 1) 페이징
+
+** 책들의 대여 횟수를 이용해서 순위를 조회할 수 있습니다.
+** 요구사항: 한페이지에 2건씩 조회
+
+==== HTTP Request
+include::{snippets}/rank-book-paging-param/http-request.adoc[]
+
+==== HTTP Response
+include::{snippets}/rank-book-paging-param/http-response.adoc[]
+include::{snippets}/rank-book-paging-param/response-fields.adoc[]
+
+'''
+
+[[rank-book-paging2]]
+=== 2) 페이징 기본값 (offset : 0)
+
+** 책들의 대여 횟수를 이용해서 순위를 조회할 수 있습니다.
+
+==== HTTP Request
+include::{snippets}/rank-book-paging-param-empty-offset/http-request.adoc[]
+
+==== HTTP Response
+include::{snippets}/rank-book-paging-param-empty-offset/http-response.adoc[]
+include::{snippets}/rank-book-paging-param-empty-offset/response-fields.adoc[]
+
+'''
+
+[[rank-book-paging3]]
+=== 3) 페이징 기본값 (limit : 100)
+
+** 책들의 대여 횟수를 이용해서 순위를 조회할 수 있습니다.
+
+==== HTTP Request
+include::{snippets}/rank-book-paging-param-empty-limit/http-request.adoc[]
+
+==== HTTP Response
+include::{snippets}/rank-book-paging-param-empty-limit/http-response.adoc[]
+include::{snippets}/rank-book-paging-param-empty-limit/response-fields.adoc[]
+
+'''
+
+[[rank-book-paging4]]
+=== 4) 페이징 정렬 순서
+
+** 책들의 대여 횟수를 이용해서 순위를 조회할 수 있습니다.
+** 대여 횟수가 같은 경우 `책 제목 > 저자 > 출판사` 순서대로 사전순으로 정렬됩니다.
+
+==== HTTP Request
+include::{snippets}/rank-book-paging-param-equals-title/http-request.adoc[]
+
+==== HTTP Response
+** 아래 예시는 대여횟수 및 책 제목이 동일한 상황에서 `저자` 를 기준으로 정렬 하고 있습니다.
+include::{snippets}/rank-book-paging-param-equals-title/http-response.adoc[]
+include::{snippets}/rank-book-paging-param-equals-title/response-fields.adoc[]

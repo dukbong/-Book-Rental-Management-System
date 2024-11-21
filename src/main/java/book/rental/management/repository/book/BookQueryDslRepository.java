@@ -3,10 +3,12 @@ package book.rental.management.repository.book;
 import book.rental.management.domain.book.Book;
 import book.rental.management.domain.book.QBook;
 import book.rental.management.domain.loan.QLoan;
-import book.rental.management.request.book.BookCondition;
+import book.rental.management.dto.BookCondition;
+import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Predicate;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
 
@@ -38,6 +40,23 @@ public class BookQueryDslRepository {
                 .fetch();
     }
 
+    public List<Book> getBookByRank(Pageable pageable) {
+        QBook book = QBook.book;
+
+        OrderSpecifier<?> rentalCountOrder = book.rentalCount.desc();
+        OrderSpecifier<?> nameOrder = book.title.asc();
+        OrderSpecifier<?> authorOrder = book.author.asc();
+        OrderSpecifier<?> publisherOrder = book.publisher.asc();
+
+        return query
+                .select(book)
+                .from(book)
+                .orderBy(rentalCountOrder, nameOrder, authorOrder, publisherOrder)
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetch();
+    }
+
     private Predicate titleLike(String title) {
         if(!StringUtils.hasText(title)) {
             return null;
@@ -58,5 +77,6 @@ public class BookQueryDslRepository {
         }
         return QBook.book.publisher.like("%" + publisher + "%");
     }
+
 
 }

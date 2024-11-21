@@ -14,7 +14,7 @@ include::{snippets}/rental-book-success/response-fields.adoc[]
 '''
 
 [[member-rental-book-empty-memberId]]
-=== 1) 대여할 사용자 ID 필수 사항
+=== 1) 사용자 ID 필수 사항
 
 ** 사용자 ID가 누락된 경우 `400 Bad Request` 오류가 발생한다.
 
@@ -29,7 +29,7 @@ include::{snippets}/rental-book-fail-empty-member-id/response-fields.adoc[]
 '''
 
 [[member-rental-book-empty-bookId]]
-=== 2) 대여할 책 ID 필수 사항
+=== 2) 책 ID 필수 사항
 
 ** 책 ID가 누락된 경우 `400 Bad Request` 오류가 발생한다.
 

@@ -1,7 +1,7 @@
 ifndef::snippets[]
 :snippets: ../../build/generated-snippets
 endif::[]
-= 도서 관리 시스템 API
+= 도서 관리 시스템 API 문서
 :doctype: book
 :icons: font
 :source-highlighter: highlightjs
@@ -26,3 +26,5 @@ include::api/member/getMembers.adoc[]
 include::api/member/rental.adoc[]
 == 책 반납 관련 API
 include::api/member/return.adoc[]
+== 책 대여 순위 관련 API
+include::api/book/rankBooks.adoc[]

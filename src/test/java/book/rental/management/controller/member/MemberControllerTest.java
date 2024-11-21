@@ -1,7 +1,7 @@
 package book.rental.management.controller.member;
 
 import book.rental.management.request.member.JoinMemberRequest;
-import book.rental.management.request.member.MemberCondition;
+import book.rental.management.dto.MemberCondition;
 import book.rental.management.request.member.RentBookRequest;
 import book.rental.management.response.member.AddMemberResponse;
 import book.rental.management.response.member.MemberResponse;
