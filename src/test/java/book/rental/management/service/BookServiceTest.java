@@ -270,14 +270,17 @@ class BookServiceTest extends IntegrationTestSupport {
 
             // then
             assertThat(result.get(0).getRentCount()).isEqualTo(1);
+            assertThat(result.get(0).getRank()).isEqualTo(1);
             assertThat(result.get(0).getTitle()).isEqualTo("b");
             assertThat(result.get(0).getAuthor()).isEqualTo("b-author");
             assertThat(result.get(0).getPublisher()).isEqualTo("b-publisher");
             assertThat(result.get(1).getRentCount()).isEqualTo(0);
+            assertThat(result.get(1).getRank()).isEqualTo(2);
             assertThat(result.get(1).getTitle()).isEqualTo("a");
             assertThat(result.get(1).getAuthor()).isEqualTo("a-author");
             assertThat(result.get(1).getPublisher()).isEqualTo("a-publisher");
             assertThat(result.get(2).getRentCount()).isEqualTo(0);
+            assertThat(result.get(2).getRank()).isEqualTo(3);
             assertThat(result.get(2).getTitle()).isEqualTo("c");
             assertThat(result.get(2).getAuthor()).isEqualTo("c-author");
             assertThat(result.get(2).getPublisher()).isEqualTo("c-publisher");
@@ -305,14 +308,17 @@ class BookServiceTest extends IntegrationTestSupport {
 
             // then
             assertThat(result.get(0).getRentCount()).isEqualTo(1);
+            assertThat(result.get(0).getRank()).isEqualTo(1);
             assertThat(result.get(0).getTitle()).isEqualTo("b");
             assertThat(result.get(0).getAuthor()).isEqualTo("b-author");
             assertThat(result.get(0).getPublisher()).isEqualTo("b-publisher");
             assertThat(result.get(1).getRentCount()).isEqualTo(0);
+            assertThat(result.get(1).getRank()).isEqualTo(2);
             assertThat(result.get(1).getTitle()).isEqualTo("c");
             assertThat(result.get(1).getAuthor()).isEqualTo("a-author");
             assertThat(result.get(1).getPublisher()).isEqualTo("a-publisher");
             assertThat(result.get(2).getRentCount()).isEqualTo(0);
+            assertThat(result.get(2).getRank()).isEqualTo(3);
             assertThat(result.get(2).getTitle()).isEqualTo("c");
             assertThat(result.get(2).getAuthor()).isEqualTo("c-author");
             assertThat(result.get(2).getPublisher()).isEqualTo("c-publisher");
@@ -340,14 +346,17 @@ class BookServiceTest extends IntegrationTestSupport {
 
             // then
             assertThat(result.get(0).getRentCount()).isEqualTo(1);
+            assertThat(result.get(0).getRank()).isEqualTo(1);
             assertThat(result.get(0).getTitle()).isEqualTo("b");
             assertThat(result.get(0).getAuthor()).isEqualTo("b-author");
             assertThat(result.get(0).getPublisher()).isEqualTo("b-publisher");
             assertThat(result.get(1).getRentCount()).isEqualTo(0);
+            assertThat(result.get(1).getRank()).isEqualTo(2);
             assertThat(result.get(1).getTitle()).isEqualTo("c");
             assertThat(result.get(1).getAuthor()).isEqualTo("c-author");
             assertThat(result.get(1).getPublisher()).isEqualTo("a-publisher");
             assertThat(result.get(2).getRentCount()).isEqualTo(0);
+            assertThat(result.get(2).getRank()).isEqualTo(3);
             assertThat(result.get(2).getTitle()).isEqualTo("c");
             assertThat(result.get(2).getAuthor()).isEqualTo("c-author");
             assertThat(result.get(2).getPublisher()).isEqualTo("c-publisher");
@@ -379,10 +388,12 @@ class BookServiceTest extends IntegrationTestSupport {
 
             // then
             assertThat(result.get(0).getRentCount()).isEqualTo(1);
+            assertThat(result.get(0).getRank()).isEqualTo(1);
             assertThat(result.get(0).getTitle()).isEqualTo("b");
             assertThat(result.get(0).getAuthor()).isEqualTo("b-author");
             assertThat(result.get(0).getPublisher()).isEqualTo("b-publisher");
             assertThat(result.get(1).getRentCount()).isEqualTo(0);
+            assertThat(result.get(1).getRank()).isEqualTo(2);
             assertThat(result.get(1).getTitle()).isEqualTo("c");
             assertThat(result.get(1).getAuthor()).isEqualTo("c-author");
             assertThat(result.get(1).getPublisher()).isEqualTo("a-publisher");
@@ -412,6 +423,7 @@ class BookServiceTest extends IntegrationTestSupport {
             assertThat(result.get(0).getRentCount()).isEqualTo(0);
             assertThat(result.get(0).getTitle()).isEqualTo("c");
             assertThat(result.get(0).getAuthor()).isEqualTo("c-author");
+            assertThat(result.get(0).getRank()).isEqualTo(3);
             assertThat(result.get(0).getPublisher()).isEqualTo("c-publisher");
         }
 
@@ -438,6 +450,7 @@ class BookServiceTest extends IntegrationTestSupport {
             // then
             assertThat(result).hasSize(0);
         }
+
     }
 
 

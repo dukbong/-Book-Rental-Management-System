@@ -50,7 +50,7 @@ public class BookController {
     @GetMapping("/api/v1/book/rank")
     public ResponseEntity<BookApiResponse<List<RankBookResponse>>> rankBook(@RequestParam(value = "offset", defaultValue = "0") int offset,
                                                                             @RequestParam(value = "limit", defaultValue = "100") int limit) {
-        Pageable pageable = PageRequest.of(offset, limit == 0 ? 100 : limit);
+        Pageable pageable = PageRequest.of(offset <= 0 ? 0 : offset, limit <= 0 ? 100 : limit);
         List<RankBookResponse> result = bookService.rankBook(pageable);
         return ResponseEntity.ok().body(new BookApiResponse<>(result));
     }

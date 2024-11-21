@@ -26,9 +26,9 @@ public class BookControllerRankBookWithPageOffsetEmptyTest extends RestDocSuppor
     @DisplayName("[페이징 - offset: null] 대여한 횟수로 책의 순위를 매길 수 있다.")
     void rankBook() throws Exception {
         // given
-        RankBookResponse response1 = new RankBookResponse("A", "A-author", "A-publisher", 3);
-        RankBookResponse response2 = new RankBookResponse("B", "B-author", "B-publisher", 5);
-        RankBookResponse response3 = new RankBookResponse("C", "C-author", "C-publisher", 4);
+        RankBookResponse response1 = new RankBookResponse("A", "A-author", "A-publisher", 3, 3);
+        RankBookResponse response2 = new RankBookResponse("B", "B-author", "B-publisher", 1, 5);
+        RankBookResponse response3 = new RankBookResponse("C", "C-author", "C-publisher", 2, 4);
 
         Pageable pageable = PageRequest.of(0,3);
 
@@ -53,6 +53,8 @@ public class BookControllerRankBookWithPageOffsetEmptyTest extends RestDocSuppor
                                         .description("저자"),
                                 fieldWithPath("data[].publisher").type(JsonFieldType.STRING)
                                         .description("출판사"),
+                                fieldWithPath("data[].rank").type(JsonFieldType.NUMBER)
+                                        .description("순위"),
                                 fieldWithPath("data[].rentCount").type(JsonFieldType.NUMBER)
                                         .description("대여 횟수")
                         )

@@ -26,8 +26,8 @@ public class BookControllerRankBookWithPageEqualsToTileTest extends RestDocSuppo
     @DisplayName("[페이징 offset:0, limit:2] 대여한 횟수로 책의 순위를 매길 수 있다.")
     void rankBook() throws Exception {
         // given
-        RankBookResponse response2 = new RankBookResponse("B", "B-author", "B-publisher", 4);
-        RankBookResponse response3 = new RankBookResponse("B", "C-author", "C-publisher", 4);
+        RankBookResponse response2 = new RankBookResponse("B", "B-author", "B-publisher", 1, 4);
+        RankBookResponse response3 = new RankBookResponse("B", "C-author", "C-publisher", 2, 4);
 
         Pageable pageable = PageRequest.of(0,2);
 
@@ -53,6 +53,8 @@ public class BookControllerRankBookWithPageEqualsToTileTest extends RestDocSuppo
                                         .description("저자"),
                                 fieldWithPath("data[].publisher").type(JsonFieldType.STRING)
                                         .description("출판사"),
+                                fieldWithPath("data[].rank").type(JsonFieldType.NUMBER)
+                                        .description("순위"),
                                 fieldWithPath("data[].rentCount").type(JsonFieldType.NUMBER)
                                         .description("대여 횟수")
                         )

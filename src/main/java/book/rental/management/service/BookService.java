@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.IntStream;
 
 @Service
 @RequiredArgsConstructor
@@ -63,24 +64,26 @@ public class BookService {
         return member.getActiveLoanSortedByReturnDate();
     }
 
+    // 페이징 처리
+    public List<RankBookResponse> rankBook(Pageable pageable) {
+        List<Book> ranking = bookQueryDslRepository.getBookByRank(pageable);
+        int startRank = (int) pageable.getOffset() + 1;
+        return IntStream.range(0, ranking.size())
+                .mapToObj(i -> new RankBookResponse(
+                        ranking.get(i).getTitle(),
+                        ranking.get(i).getAuthor(),
+                        ranking.get(i).getPublisher(),
+                        startRank + i,
+                        ranking.get(i).getRentalCount()
+                )).toList();
+    }
+
     private List<BookResponse> convertResponse(List<Book> books) {
         return books.stream()
                 .map(book -> new BookResponse(
                         book.getTitle(),
                         book.getAuthor(),
                         book.getPublisher()
-                )).toList();
-    }
-
-    // 페이징 처리
-    public List<RankBookResponse> rankBook(Pageable pageable) {
-        List<Book> ranking = bookQueryDslRepository.getBookByRank(pageable);
-        return ranking.stream()
-                .map(book -> new RankBookResponse(
-                        book.getTitle(),
-                        book.getAuthor(),
-                        book.getPublisher(),
-                        book.getRentalCount()
                 )).toList();
     }
 }

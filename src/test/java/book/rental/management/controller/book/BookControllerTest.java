@@ -6,11 +6,13 @@ import book.rental.management.dto.BookCondition;
 import book.rental.management.response.book.AddBookResponse;
 import book.rental.management.response.book.BookLoanResponse;
 import book.rental.management.response.book.BookResponse;
+import book.rental.management.response.book.RankBookResponse;
 import book.rental.management.support.ControllerTestSupport;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
@@ -47,6 +49,126 @@ class BookControllerTest extends ControllerTestSupport {
                     .andDo(MockMvcResultHandlers.print())
                     .andExpect(MockMvcResultMatchers.status().isOk())
                     .andExpect(jsonPath("$.data.id").value(addBookResponse.getId())); // 응답의 "data" 필드 값 확인
+        }
+    }
+
+    @Nested
+    @DisplayName("대여 랭킹")
+    class rankBookTests {
+        @Test
+        @DisplayName("[성공 - limit:2] Offset 의 기본값은 0이다.")
+        void rankBook_offset_default_0() throws Exception {
+            // given
+            RankBookResponse response1 = new RankBookResponse("A", "A-author", "A-publisher", 1, 20);
+            RankBookResponse response2 = new RankBookResponse("B", "B-author", "B-publisher", 2, 10);
+
+            // when
+            when(bookService.rankBook(PageRequest.of(0, 2))).thenReturn(List.of(response1, response2));
+
+            // then
+            mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/book/rank")
+                    .param("limit", "2")
+                    .contentType(MediaType.APPLICATION_JSON))
+                    .andDo(MockMvcResultHandlers.print())
+                    .andExpect(MockMvcResultMatchers.status().isOk())
+                    .andExpect(jsonPath("$.data[0].title").value("A"))
+                    .andExpect(jsonPath("$.data[0].rank").value(1))
+                    .andExpect(jsonPath("$.data[1].title").value("B"))
+                    .andExpect(jsonPath("$.data[1].rank").value(2));
+        }
+
+        @Test
+        @DisplayName("[성공 - offset:0] limit 의 기본값은 100이다.")
+        void rankBook_limit_default_100() throws Exception {
+            // given
+            RankBookResponse response1 = new RankBookResponse("A", "A-author", "A-publisher", 1, 20);
+            RankBookResponse response2 = new RankBookResponse("B", "B-author", "B-publisher", 2, 10);
+
+            // when
+            when(bookService.rankBook(PageRequest.of(0, 100))).thenReturn(List.of(response1, response2));
+
+            // then
+            mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/book/rank")
+                            .param("offset", "0")
+                            .contentType(MediaType.APPLICATION_JSON))
+                    .andDo(MockMvcResultHandlers.print())
+                    .andExpect(MockMvcResultMatchers.status().isOk())
+                    .andExpect(jsonPath("$.data[0].title").value("A"))
+                    .andExpect(jsonPath("$.data[0].rank").value(1))
+                    .andExpect(jsonPath("$.data[1].title").value("B"))
+                    .andExpect(jsonPath("$.data[1].rank").value(2));
+        }
+
+        @Test
+        @DisplayName("[성공 - offset:1 & limit:2] 랭킹 3위 4위 요소가 조회된다.")
+        void rankBook_offset_1_limit_2() throws Exception {
+            // given
+            RankBookResponse response1 = new RankBookResponse("A", "A-author", "A-publisher", 1, 20);
+            RankBookResponse response2 = new RankBookResponse("B", "B-author", "B-publisher", 2, 10);
+            RankBookResponse response3 = new RankBookResponse("C", "C-author", "C-publisher", 3, 5);
+
+            // when
+            when(bookService.rankBook(PageRequest.of(1, 2))).thenReturn(List.of(response3));
+
+            // then
+            mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/book/rank")
+                            .param("offset", "1")
+                            .param("limit", "2")
+                            .contentType(MediaType.APPLICATION_JSON))
+                    .andDo(MockMvcResultHandlers.print())
+                    .andExpect(MockMvcResultMatchers.status().isOk())
+                    .andExpect(jsonPath("$.data[0].title").value("C"))
+                    .andExpect(jsonPath("$.data[0].rank").value(3));
+        }
+
+        @Test
+        @DisplayName("[성공 - offset:-1 & limit:-2] 알맞는 값이 아닌 경우 기본값으로 조회된다.")
+        void rankBook_offset_m1_limit_m2() throws Exception {
+            // given
+            RankBookResponse response1 = new RankBookResponse("A", "A-author", "A-publisher", 1, 20);
+            RankBookResponse response2 = new RankBookResponse("B", "B-author", "B-publisher", 2, 10);
+            RankBookResponse response3 = new RankBookResponse("C", "C-author", "C-publisher", 3, 5);
+
+            // when
+            when(bookService.rankBook(PageRequest.of(0, 100))).thenReturn(List.of(response1, response2, response3));
+
+            // then
+            mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/book/rank")
+                            .param("offset", "-1")
+                            .param("limit", "-2")
+                            .contentType(MediaType.APPLICATION_JSON))
+                    .andDo(MockMvcResultHandlers.print())
+                    .andExpect(MockMvcResultMatchers.status().isOk())
+                    .andExpect(jsonPath("$.data[0].title").value("A"))
+                    .andExpect(jsonPath("$.data[0].rank").value(1))
+                    .andExpect(jsonPath("$.data[1].title").value("B"))
+                    .andExpect(jsonPath("$.data[1].rank").value(2))
+                    .andExpect(jsonPath("$.data[2].title").value("C"))
+                    .andExpect(jsonPath("$.data[2].rank").value(3));
+        }
+
+        @Test
+        @DisplayName("[성공 - offset:0 & limit:0] 최대 100위까지 조회")
+        void rankBook_offset_0_limit_0() throws Exception {
+            // given
+            RankBookResponse response1 = new RankBookResponse("A", "A-author", "A-publisher", 1, 20);
+            RankBookResponse response2 = new RankBookResponse("B", "B-author", "B-publisher", 2, 10);
+            RankBookResponse response3 = new RankBookResponse("C", "C-author", "C-publisher", 3, 5);
+
+            // when
+            when(bookService.rankBook(PageRequest.of(0, 100))).thenReturn(List.of(response1,response2,response3));
+
+            // then
+            mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/book/rank")
+                            .contentType(MediaType.APPLICATION_JSON))
+                    .andDo(MockMvcResultHandlers.print())
+                    .andExpect(MockMvcResultMatchers.status().isOk())
+                    .andExpect(jsonPath("$.data[0].title").value("A"))
+                    .andExpect(jsonPath("$.data[0].rank").value(1))
+                    .andExpect(jsonPath("$.data[1].title").value("B"))
+                    .andExpect(jsonPath("$.data[1].rank").value(2))
+                    .andExpect(jsonPath("$.data[2].title").value("C"))
+                    .andExpect(jsonPath("$.data[2].rank").value(3));
         }
     }
 
