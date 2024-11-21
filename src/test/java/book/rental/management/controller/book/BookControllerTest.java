@@ -139,7 +139,7 @@ class BookControllerTest extends ControllerTestSupport {
                             .contentType(MediaType.APPLICATION_JSON))
                     .andDo(MockMvcResultHandlers.print())
                     .andExpect(MockMvcResultMatchers.status().isOk())
-                    .andExpect(jsonPath("$.data[0].title").value("C"))
+                    .andExpect(jsonPath("$.data[0].title").value("A"))
                     .andExpect(jsonPath("$.data[0].rank").value(1))
                     .andExpect(jsonPath("$.data[0].author").value("A-author"))
                     .andExpect(jsonPath("$.data[1].title").value("B"))
