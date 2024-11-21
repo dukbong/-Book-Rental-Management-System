@@ -141,6 +141,7 @@ class BookControllerTest extends ControllerTestSupport {
                     .andExpect(MockMvcResultMatchers.status().isOk())
                     .andExpect(jsonPath("$.data[0].title").value("A"))
                     .andExpect(jsonPath("$.data[0].rank").value(1))
+                    .andExpect(jsonPath("$.data[0].author").value("A-author"))
                     .andExpect(jsonPath("$.data[1].title").value("B"))
                     .andExpect(jsonPath("$.data[1].rank").value(2))
                     .andExpect(jsonPath("$.data[2].title").value("C"))
