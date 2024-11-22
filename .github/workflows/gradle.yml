@@ -23,7 +23,7 @@ jobs:
         java-version: '17'
         distribution: 'temurin'
 
-    # gradlew 실행 권한 설정 (이미 권한이 설정되어 있을 수 있으므로 이를 무시)
+    # gradlew 실행 권한 설정 (권한이 없으면 설정하고, 이미 권한이 있으면 무시)
     - name: Give Gradle Wrapper execute permission
       run: chmod +x gradlew || echo "gradlew is already executable"
 
@@ -57,12 +57,12 @@ jobs:
       run: |
         sed -i "s/Code Coverage: .*%/Code Coverage: ${COVERAGE}%/" README.md
 
-    # Commit README update with code coverage
-    - name: Commit README Update
+    # Commit gradlew permission change and README update
+    - name: Commit gradlew permissions and README update
       if: github.ref == 'refs/heads/main'
       run: |
         git config --global user.name 'github-actions[bot]'
         git config --global user.email 'github-actions[bot]@users.noreply.github.com'
-        git add README.md
-        git commit -m "Update README with code coverage: ${COVERAGE}%"
+        git add gradlew README.md
+        git commit -m "Fix gradlew permissions and update README with code coverage: ${COVERAGE}%"
         git push
