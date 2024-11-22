@@ -48,9 +48,17 @@ jobs:
     - name: Extract Jacoco Coverage
       id: coverage
       run: |
-        COVERAGE=$(grep -oP '(?<=<counter type="INSTRUCTION" missed="[0-9]+" covered="[0-9]+").*?covered="[0-9]+"' build/reports/jacoco/test/jacocoTestReport.xml | awk -F'"' '{print $4}')
+        # Jacoco XML 파일에서 커버리지 값을 추출
+        COVERAGE=$(grep -oP '(?<=<counter type="INSTRUCTION" missed="[0-9]+" covered="[0-9]+").*?covered="[0-9]+"' build/reports/jacoco/test/jacocoTestReport.xml | awk -F'"' '{print $4}' | head -n 1)
+    
+        # 커버리지 값이 비어있는지 확인하고, 비어있으면 0으로 설정
+        if [ -z "$COVERAGE" ]; then
+          COVERAGE=0
+        fi
+
         echo "COVERAGE=${COVERAGE}" >> $GITHUB_ENV
         echo "Code Coverage: $COVERAGE%"  # Optional log for debugging
+    #=================
 
     # Update CodeCoverage.md with coverage percentage
     - name: Update CodeCoverage.md
