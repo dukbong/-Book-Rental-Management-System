@@ -35,6 +35,8 @@ public class QMember extends EntityPathBase<Member> {
 
     public final StringPath phoneNumber = createString("phoneNumber");
 
+    public final ListPath<book.rental.management.domain.reservation.Reservation, book.rental.management.domain.reservation.QReservation> reservations = this.<book.rental.management.domain.reservation.Reservation, book.rental.management.domain.reservation.QReservation>createList("reservations", book.rental.management.domain.reservation.Reservation.class, book.rental.management.domain.reservation.QReservation.class, PathInits.DIRECT2);
+
     //inherited
     public final DateTimePath<java.time.LocalDateTime> updateAt = _super.updateAt;
 

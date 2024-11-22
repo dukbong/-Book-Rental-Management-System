@@ -35,6 +35,8 @@ public class QBook extends EntityPathBase<Book> {
 
     public final NumberPath<Integer> rentalCount = createNumber("rentalCount", Integer.class);
 
+    public final ListPath<book.rental.management.domain.reservation.Reservation, book.rental.management.domain.reservation.QReservation> reservations = this.<book.rental.management.domain.reservation.Reservation, book.rental.management.domain.reservation.QReservation>createList("reservations", book.rental.management.domain.reservation.Reservation.class, book.rental.management.domain.reservation.QReservation.class, PathInits.DIRECT2);
+
     public final StringPath title = createString("title");
 
     //inherited

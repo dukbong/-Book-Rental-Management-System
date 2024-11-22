@@ -12,6 +12,7 @@ import book.rental.management.response.member.AddMemberResponse;
 import book.rental.management.response.member.MemberResponse;
 import book.rental.management.response.member.RentalBookResponse;
 import book.rental.management.response.member.ReturnBookResponse;
+import book.rental.management.response.reservation.ReservationResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -127,6 +128,20 @@ public class MemberService {
                 () -> new IllegalArgumentException("책을 찾을 수 없습니다.")
         );
         return new ReturnBookResponse(member.returnTo(book));
+    }
+
+    @Transactional
+    public ReservationResponse reservationBook(RentBookRequest request) {
+        Member member = memberRepository.findById(request.getMemberId()).orElseThrow(
+                () -> new IllegalArgumentException("사용자를 찾을 수 없습니다.")
+        );
+        Book book = bookRepository.findById(request.getBookId()).orElseThrow(
+                () -> new IllegalArgumentException("책을 찾을 수 없습니다.")
+        );
+
+        Integer priority = member.reservationTo(book);
+
+        return new ReservationResponse(book.getId(), priority);
     }
 
     private List<MemberResponse> convertResponse(List<Member> members) {
