@@ -23,9 +23,9 @@ jobs:
         java-version: '17'
         distribution: 'temurin'
 
-    # Ensure gradlew is executable
+    # gradlew 실행 권한 설정 (이미 권한이 설정되어 있을 수 있으므로 이를 무시)
     - name: Give Gradle Wrapper execute permission
-      run: chmod +x gradlew
+      run: chmod +x gradlew || echo "gradlew is already executable"
 
     # Cache Gradle dependencies
     - name: Cache Gradle dependencies
@@ -57,7 +57,7 @@ jobs:
       run: |
         sed -i "s/Code Coverage: .*%/Code Coverage: ${COVERAGE}%/" README.md
 
-    # Commit and push README changes
+    # Commit README update with code coverage
     - name: Commit README Update
       if: github.ref == 'refs/heads/main'
       run: |
