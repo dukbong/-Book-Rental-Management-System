@@ -4,6 +4,7 @@ import book.rental.management.request.member.JoinMemberRequest;
 import book.rental.management.dto.MemberCondition;
 import book.rental.management.request.member.RentBookRequest;
 import book.rental.management.response.member.*;
+import book.rental.management.response.reservation.ReservationResponse;
 import book.rental.management.service.MemberService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -49,6 +50,12 @@ public class MemberController {
     @PostMapping("/api/v1/member/return")
     public ResponseEntity<MemberApiResponse<ReturnBookResponse>> returnBook(@RequestBody @Valid RentBookRequest request) {
         ReturnBookResponse result = memberService.returnBookV2(request);
+        return ResponseEntity.ok().body(new MemberApiResponse<>(result));
+    }
+
+    @PostMapping("/api/v1/member/reservation")
+    public ResponseEntity<MemberApiResponse<ReservationResponse>> reservationBook(@RequestBody @Valid RentBookRequest request) {
+        ReservationResponse result = memberService.reservationBook(request);
         return ResponseEntity.ok().body(new MemberApiResponse<>(result));
     }
 

@@ -3,6 +3,7 @@ package book.rental.management.domain.loan;
 import book.rental.management.domain.Base;
 import book.rental.management.domain.book.Book;
 import book.rental.management.domain.member.Member;
+import book.rental.management.domain.reservation.Reservation;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -66,5 +67,9 @@ public class Loan extends Base {
 
     public boolean isActive() {
         return this.loanStatus == LoanStatus.ON_TIME || this.loanStatus == LoanStatus.OVERDUE;
+    }
+
+    public boolean isRentedByMember(Member member) {
+        return this.getMember().getId().equals(member.getId()) && (this.getLoanStatus() == LoanStatus.ON_TIME || this.getLoanStatus() == LoanStatus.OVERDUE);
     }
 }
