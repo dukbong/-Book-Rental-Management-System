@@ -12,7 +12,8 @@
 - **Build Tool**: Gradle  
 - **ORM**: Spring Data JPA & QueryDsl (동적 쿼리, 페이징)  
 - **Testing**: JUnit5 & Mockito  
-- **API Documentation**: Spring REST Docs  
+- **API Documentation**: Spring REST Docs
+- **CI**: GitHub Actions ( PR 시 자동 테스트 - 코드 품질 검증 )
 
 #### 주요 엔티티 구조
 ```mermaid
