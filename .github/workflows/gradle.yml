@@ -10,7 +10,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     permissions:
-      contents: read
+      contents: write  # README 업데이트를 위해 write 권한 필요
 
     steps:
     # Checkout the repository
@@ -40,10 +40,29 @@ jobs:
     - name: Setup Gradle
       uses: gradle/actions/setup-gradle@v4
 
-    # Run tests
-    - name: Run Tests
-      run: ./gradlew clean test
+    # Run tests and generate Jacoco report
+    - name: Run Tests with Coverage
+      run: ./gradlew clean test jacocoTestReport
 
-    # Build the project
-    - name: Build with Gradle Wrapper
-      run: ./gradlew build
+    # Check Jacoco coverage
+    - name: Extract Jacoco Coverage
+      id: coverage
+      run: |
+        COVERAGE=$(grep -oP '(?<=<counter type="INSTRUCTION" missed="[0-9]+" covered="[0-9]+").*?covered="[0-9]+"' build/reports/jacoco/test/jacocoTestReport.xml | awk -F'"' '{print $4}')
+        echo "COVERAGE=${COVERAGE}" >> $GITHUB_ENV
+        echo "Code Coverage: $COVERAGE%"  # Optional log for debugging
+
+    # Update README with coverage percentage
+    - name: Update README
+      run: |
+        sed -i "s/Code Coverage: .*%/Code Coverage: ${COVERAGE}%/" README.md
+
+    # Commit and push README changes
+    - name: Commit README Update
+      if: github.ref == 'refs/heads/main'
+      run: |
+        git config --global user.name 'github-actions[bot]'
+        git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+        git add README.md
+        git commit -m "Update README with code coverage: ${COVERAGE}%"
+        git push
