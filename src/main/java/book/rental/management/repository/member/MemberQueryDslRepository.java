@@ -6,6 +6,7 @@ import book.rental.management.dto.MemberCondition;
 import com.querydsl.core.types.Predicate;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
 
@@ -20,7 +21,7 @@ public class MemberQueryDslRepository {
         this.query = new JPAQueryFactory(em);
     }
 
-    public List<Member> getMemberByCondition(MemberCondition condition) {
+    public List<Member> getMemberByCondition(@NotNull MemberCondition condition) {
         QMember member = QMember.member;
         return query
                 .select(member)
@@ -35,14 +36,23 @@ public class MemberQueryDslRepository {
     }
 
     private Predicate phoneNumberLike(String phoneNumber) {
+        if(!StringUtils.hasText(phoneNumber)) {
+            return null;
+        }
         return QMember.member.phoneNumber.contains(phoneNumber);
     }
 
     private Predicate emailLike(String email) {
+        if(!StringUtils.hasText(email)) {
+            return null;
+        }
         return QMember.member.email.contains(email);
     }
 
     private Predicate nameLike(String name) {
+        if(!StringUtils.hasText(name)) {
+            return null;
+        }
         return QMember.member.name.contains(name);
     }
 
