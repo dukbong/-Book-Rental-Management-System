@@ -37,8 +37,16 @@ erDiagram
         Date returnDate "반납일"
         String loanStatus "대여 현황"
     }
+    Reservation {
+        Number id "예약 ID"
+        Number priority "예약 순서"
+        Date alertTime "알림 시간"
+        String reservationStatus "예약 상태"
+    }
     Member ||--o{ Loan : "1 : N"
+    Member ||--o{ Reservation : "1 : N"
     Book ||--o{ Loan : "1 : N"
+    Book ||--o{ Reservation : "1 : N"
 ```
 
 #### 주요 요구 사항
