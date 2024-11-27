@@ -40,7 +40,7 @@ class BookQueryDslRepositoryTest {
         BookCondition condition = new BookCondition("test1",null, null);
 
         // when
-        List<Book> result = bookQueryDslRepository.getBookByCondition(null);
+        List<Book> result = bookQueryDslRepository.getBookByCondition(condition);
 
         // then
         assertThat(result).hasSize(1);
