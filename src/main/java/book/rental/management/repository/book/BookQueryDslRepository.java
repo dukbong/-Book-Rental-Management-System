@@ -58,24 +58,15 @@ public class BookQueryDslRepository {
     }
 
     private Predicate titleLike(String title) {
-        if(!StringUtils.hasText(title)) {
-            return null;
-        }
-        return QBook.book.title.like("%" + title + "%");
+        return QBook.book.title.contains(title);
     }
 
     private Predicate authorLike(String author) {
-        if(!StringUtils.hasText(author)) {
-            return null;
-        }
-        return QBook.book.author.like("%" + author + "%");
+        return QBook.book.author.contains(author);
     }
 
     private Predicate publisherLike(String publisher) {
-        if(!StringUtils.hasText(publisher)) {
-            return null;
-        }
-        return QBook.book.publisher.like("%" + publisher + "%");
+        return QBook.book.publisher.contains(publisher);
     }
 
 

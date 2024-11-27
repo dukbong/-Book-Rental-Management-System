@@ -35,24 +35,15 @@ public class MemberQueryDslRepository {
     }
 
     private Predicate phoneNumberLike(String phoneNumber) {
-        if(!StringUtils.hasText(phoneNumber)) {
-            return null;
-        }
-        return QMember.member.phoneNumber.like("%" + phoneNumber + "%");
+        return QMember.member.phoneNumber.contains(phoneNumber);
     }
 
     private Predicate emailLike(String email) {
-        if(!StringUtils.hasText(email)) {
-            return null;
-        }
-        return QMember.member.email.like("%" + email + "%");
+        return QMember.member.email.contains(email);
     }
 
     private Predicate nameLike(String name) {
-        if(!StringUtils.hasText(name)) {
-            return null;
-        }
-        return QMember.member.name.like("%" + name + "%");
+        return QMember.member.name.contains(name);
     }
 
 }
