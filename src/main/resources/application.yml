@@ -27,6 +27,11 @@ spring:
         default_batch_fetch_size: 10
     open-in-view: false
 
+mybatis:
+  mapper-locations: classpath:mapper/**/*.xml
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    map-underscore-to-camel-case: true
 
 logging:
   level:
