@@ -10,14 +10,11 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @Transactional
 class BookQueryDslRepositoryTest {
 
-    @Autowired
-    BookQueryDslRepository bookQueryDslRepository;
     @Autowired
     BookRepository bookRepository;
 
@@ -40,7 +37,7 @@ class BookQueryDslRepositoryTest {
         BookCondition condition = new BookCondition("test1",null, null);
 
         // when
-        List<Book> result = bookQueryDslRepository.getBookByCondition(condition);
+        List<Book> result = bookRepository.getBookByCondition(condition);
 
         // then
         assertThat(result).hasSize(1);

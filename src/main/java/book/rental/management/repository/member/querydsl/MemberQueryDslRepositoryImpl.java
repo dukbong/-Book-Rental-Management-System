@@ -1,4 +1,4 @@
-package book.rental.management.repository.member;
+package book.rental.management.repository.member.querydsl;
 
 import book.rental.management.domain.member.Member;
 import book.rental.management.domain.member.QMember;
@@ -13,14 +13,15 @@ import org.springframework.util.StringUtils;
 import java.util.List;
 
 @Repository
-public class MemberQueryDslRepository {
+public class MemberQueryDslRepositoryImpl implements MemberQueryDslRepository {
 
     private final JPAQueryFactory query;
 
-    public MemberQueryDslRepository(EntityManager em) {
+    public MemberQueryDslRepositoryImpl(EntityManager em) {
         this.query = new JPAQueryFactory(em);
     }
 
+    @Override
     public List<Member> getMemberByCondition(@NotNull MemberCondition condition) {
         QMember member = QMember.member;
         return query
