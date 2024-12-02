@@ -1,4 +1,4 @@
-package book.rental.management.repository.book;
+package book.rental.management.repository.book.querydsl;
 
 import book.rental.management.domain.book.Book;
 import book.rental.management.domain.book.QBook;
@@ -15,14 +15,15 @@ import org.springframework.util.StringUtils;
 import java.util.List;
 
 @Repository
-public class BookQueryDslRepository {
+public class BookQueryDslRepositoryImpl implements BookQueryDslRepository {
 
     private final JPAQueryFactory query;
 
-    public BookQueryDslRepository(EntityManager em) {
+    public BookQueryDslRepositoryImpl(EntityManager em) {
         query = new JPAQueryFactory(em);
     }
 
+    @Override
     public List<Book> getBookByCondition(BookCondition condition) {
         QBook book = QBook.book;
         QLoan loan = QLoan.loan;
@@ -40,6 +41,7 @@ public class BookQueryDslRepository {
                 .fetch();
     }
 
+    @Override
     public List<Book> getBookByRank(Pageable pageable) {
         QBook book = QBook.book;
 

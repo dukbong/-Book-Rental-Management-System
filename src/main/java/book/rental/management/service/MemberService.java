@@ -3,7 +3,6 @@ package book.rental.management.service;
 import book.rental.management.domain.book.Book;
 import book.rental.management.domain.member.Member;
 import book.rental.management.repository.book.BookRepository;
-import book.rental.management.repository.member.MemberQueryDslRepository;
 import book.rental.management.repository.member.MemberRepository;
 import book.rental.management.request.member.JoinMemberRequest;
 import book.rental.management.dto.MemberCondition;
@@ -26,7 +25,6 @@ import java.util.Optional;
 public class MemberService {
 
     private final MemberRepository memberRepository;
-    private final MemberQueryDslRepository memberQueryDslRepository;
     private final BookRepository bookRepository;
 
     // 전체 Member 조회
@@ -37,7 +35,7 @@ public class MemberService {
 
     // 특정 조건 ( 이름, 이메일, 전화번호 ) Member 조회 - 동적 쿼리
     public List<MemberResponse> getMemberByCondition(MemberCondition condition) {
-        List<Member> findMembers = memberQueryDslRepository.getMemberByCondition(condition);
+        List<Member> findMembers = memberRepository.getMemberByCondition(condition);
         return convertResponse(findMembers);
     }
 
