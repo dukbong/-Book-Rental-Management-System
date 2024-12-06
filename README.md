@@ -10,7 +10,11 @@
 - **Spring Boot**: 3.3.5  
 - **Database**: H2 Database (테스트 환경용)  
 - **Build Tool**: Gradle  
-- **ORM**: Spring Data JPA & QueryDsl (동적 쿼리, 페이징)  
+- **Persistence**: 
+  - **Spring Data JPA**: 기본 CRUD.
+  - **QueryDsl**: 동적 쿼리 생성 및 복잡한 조건 기반 데이터 처리.
+  - **MyBatis**: SQL 매퍼로 활용, 복잡한 SQL 쿼리 처리 및 성능 최적화.
+  - **통합 환경**: JPA를 기본 데이터 접근 계층으로 사용하며, 복잡한 SQL 작업이 필요한 경우 MyBatis를 활용.
 - **Testing**: JUnit5 & Mockito  
 - **API Documentation**: Spring REST Docs
 - **CI**: GitHub Actions ( PR 시 자동 테스트 - 코드 품질 검증 )
